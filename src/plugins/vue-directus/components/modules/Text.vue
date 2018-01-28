@@ -46,8 +46,10 @@ export default {
   },
 
   methods: {
-    changed({ html }) {
-      if (html !== this.initialContent) {
+    changed({ html, text }) {
+      // We need to compare trimmed texts for the case that the initial content
+      // we got from the cms was a plain string instead of html
+      if (html !== this.initialContent && text.trim() !== this.initialContent.trim()) {
         this.$store.dispatch('VueDirectus/items/edit', {
           table: this.$parent.$props.table,
           id: this.$parent.$props.id,
