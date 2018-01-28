@@ -49,17 +49,17 @@ module.exports = {
       {
         blankLine: 'always',
         prev: '*',
-        next: ['import', 'export', 'block', 'block-like', 'if', 'const', 'let']
+        next: ['import', 'directive', 'export', 'block', 'block-like', 'if', 'const', 'let']
       },
       {
         blankLine: 'always',
-        prev: ['import', 'export', 'block', 'block-like', 'if', 'const', 'let'],
+        prev: ['import', 'directive', 'export', 'block', 'block-like', 'if', 'const', 'let'],
         next: '*'
       },
       {
         blankLine: 'never',
-        prev: ['import', 'const', 'let'],
-        next: ['import', 'const', 'let']
+        prev: ['import', 'directive', 'const', 'let'],
+        next: ['import', 'directive', 'const', 'let']
       }
     ]
   }
