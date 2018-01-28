@@ -1,5 +1,6 @@
 import VueQuillEditor from 'vue-quill-editor'
 import * as AppStore from './store'
+import * as AppComponent from './components'
 
 const VueDirectus = {
   install(Vue, { store, client }) {
@@ -26,11 +27,16 @@ const VueDirectus = {
     })
 
     // Require editor styles
-    require('quill/dist/quill.core.css')
-    require('quill/dist/quill.bubble.css')
+    require('./assets/css/lib/quill.core.css')
+    require('./assets/css/lib/quill.theme.css')
 
     // Mount editor as global component
     Vue.use(VueQuillEditor)
+
+    // Mount plugin components
+    Object.entries(AppComponent).forEach(component => {
+      Vue.component(component[1].name, component[1])
+    })
   }
 }
 
