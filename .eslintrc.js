@@ -1,9 +1,6 @@
 const poi = require('poi')
-
 const poiConfig = require('./.poirc.js')
-
 const poiApp = poi(poiConfig)
-
 const webpackConfig = poiApp.createWebpackConfig()
 
 module.exports = {
@@ -52,12 +49,17 @@ module.exports = {
       {
         blankLine: 'always',
         prev: '*',
-        next: ['block', 'block-like', 'if']
+        next: ['import', 'export', 'block', 'block-like', 'if', 'const', 'let']
       },
       {
         blankLine: 'always',
-        prev: ['import', 'block', 'block-like', 'if', 'const', 'let'],
+        prev: ['import', 'export', 'block', 'block-like', 'if', 'const', 'let'],
         next: '*'
+      },
+      {
+        blankLine: 'never',
+        prev: ['import', 'export', 'const', 'let'],
+        next: ['import', 'export', 'const', 'let']
       }
     ]
   }
