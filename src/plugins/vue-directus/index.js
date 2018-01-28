@@ -9,4 +9,5 @@ const VueDirectus = {
     }
   }
 }
+
 export default VueDirectus

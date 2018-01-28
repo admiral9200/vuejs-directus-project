@@ -58,8 +58,8 @@ module.exports = {
       },
       {
         blankLine: 'never',
-        prev: ['import', 'export', 'const', 'let'],
-        next: ['import', 'export', 'const', 'let']
+        prev: ['import', 'const', 'let'],
+        next: ['import', 'const', 'let']
       }
     ]
   }
