@@ -58,8 +58,13 @@ module.exports = {
       },
       {
         blankLine: 'never',
-        prev: ['import', 'directive', 'const', 'let'],
-        next: ['import', 'directive', 'const', 'let']
+        prev: ['import', 'directive'],
+        next: ['import', 'directive']
+      },
+      {
+        blankLine: 'never',
+        prev: ['const', 'let'],
+        next: ['const', 'let']
       }
     ]
   }
