@@ -1,6 +1,9 @@
 const poi = require('poi')
+
 const poiConfig = require('./.poirc.js')
+
 const poiApp = poi(poiConfig)
+
 const webpackConfig = poiApp.createWebpackConfig()
 
 module.exports = {
@@ -35,6 +38,7 @@ module.exports = {
     'promise/avoid-new': 0,
     'arrow-parens': 0,
     'capitalized-comments': 0,
+    'no-var': 2,
     'no-new': 0,
     'no-new-object': 2,
     'no-new-require': 2,
@@ -42,6 +46,19 @@ module.exports = {
     'no-new-wrappers': 2,
     'no-unused-vars': [2, { vars: 'all', args: 'none' }],
     'vue/max-attributes-per-line': 0,
-    'no-console': process.env.NODE_ENV === 'production' ? 2 : 1
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
+    'padding-line-between-statements': [
+      2,
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: ['block', 'block-like', 'if']
+      },
+      {
+        blankLine: 'always',
+        prev: ['import', 'block', 'block-like', 'if', 'const', 'let'],
+        next: '*'
+      }
+    ]
   }
 }
