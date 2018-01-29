@@ -1,4 +1,5 @@
-import VueQuillEditor from 'vue-quill-editor'
+import VueQuillEditor, { Quill } from 'vue-quill-editor'
+import ImageResize from 'quill-image-resize-module'
 import * as AppStore from './store'
 import * as AppComponent from './components'
 
@@ -32,6 +33,31 @@ const VueDirectus = {
 
     // Mount editor as global component
     Vue.use(VueQuillEditor)
+
+    // Register editor modules
+    Quill.register('modules/imageResize', ImageResize)
+
+    // Setup global helpers
+    Vue.mixin({
+      methods: {
+        setImagePaths: str => {
+          let images = str.match(/<img[^>]+>/)
+          let storageUrl = client.url.substring(0, client.url.indexOf('api')).replace(/\/$/, '')
+
+          if (!images) {
+            return str
+          }
+
+          images.forEach(img => {
+            if (!img.includes(storageUrl)) {
+              str = str.replace(img, img.replace('/storage/', `${storageUrl}/storage/`))
+            }
+          })
+
+          return str
+        }
+      }
+    })
 
     // Mount plugin components
     Object.entries(AppComponent).forEach(component => {

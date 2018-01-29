@@ -1,6 +1,6 @@
 <template>
   <div class="vue-directus-text">
-    <quill-editor :content="content" :options="options" @change="changed($event)" />
+    <quill-editor :content="renderedContent" :options="options" @change="changed($event)" @ready="ready($event)" />
   </div>
 </template>
 
@@ -22,12 +22,13 @@ export default {
   data() {
     return {
       initialContent: '',
+      renderedContent: '',
       options: {
         theme: 'bubble',
         placeholder: 'Enter some text...',
         modules: {
-          clipboard: {
-            matchVisual: false
+          imageResize: {
+            modules: ['Resize', 'DisplaySize', 'Toolbar']
           },
           toolbar: [
             ['bold', 'italic'],
@@ -41,31 +42,32 @@ export default {
     }
   },
 
-  mounted() {
-    this.initialContent = this.$props.content
+  created() {
+    this.renderedContent = this.setImagePaths(this.content)
   },
 
   methods: {
+    ready(quill) {
+      this.initialContent = quill.container.firstChild.innerHTML
+    },
     changed({ html, text }) {
-      // We need to compare trimmed texts for the case that the initial content
-      // we got from the cms was a plain string instead of html
-      // if (html !== this.initialContent && text.trim() !== this.initialContent.trim()) {
-      //   this.$store.dispatch('VueDirectus/items/edit', {
-      //     table: this.$parent.$props.table,
-      //     id: this.$parent.$props.id,
-      //     column: this.$props.column,
-      //     content: html
-      //   })
-      //   this.$store.dispatch('VueDirectus/items/commit', {
-      //     table: this.$parent.$props.table,
-      //     id: this.$parent.$props.id
-      //   })
-      // } else {
-      //   this.$store.dispatch('VueDirectus/items/undo', {
-      //     table: this.$parent.$props.table,
-      //     id: this.$parent.$props.id
-      //   })
-      // }
+      if (html !== this.initialContent) {
+        this.$store.dispatch('VueDirectus/items/edit', {
+          table: this.$parent.$props.table,
+          id: this.$parent.$props.id,
+          column: this.$props.column,
+          content: html
+        })
+        this.$store.dispatch('VueDirectus/items/commit', {
+          table: this.$parent.$props.table,
+          id: this.$parent.$props.id
+        })
+      } else {
+        this.$store.dispatch('VueDirectus/items/undo', {
+          table: this.$parent.$props.table,
+          id: this.$parent.$props.id
+        })
+      }
     }
   }
 }
