@@ -118,9 +118,6 @@ typings/
 .sass-cache/
 *.css.map
 
-### Stylus ###
-*.css
-
 ### SublimeText ###
 # cache files for sublime text
 *.tmlanguage.cache
