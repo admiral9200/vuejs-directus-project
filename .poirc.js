@@ -1,5 +1,5 @@
-const StylelintPlugin = require('stylelint-webpack-plugin')
 const webpack = require('webpack')
+const StylelintPlugin = require('stylelint-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
