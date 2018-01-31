@@ -31,6 +31,7 @@ export default {
         theme: 'bubble',
         placeholder: 'Enter some text...',
         modules: {
+          imageDrop: true,
           imageResize: {
             modules: ['Resize', 'DisplaySize', 'Toolbar']
           },

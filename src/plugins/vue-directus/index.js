@@ -1,5 +1,6 @@
 import VueQuillEditor, { Quill } from 'vue-quill-editor'
 import ImageResize from 'quill-image-resize-module'
+import { ImageDrop } from 'quill-image-drop-module'
 import * as AppStore from './store'
 import * as AppComponent from './components'
 
@@ -36,6 +37,7 @@ const VueDirectus = {
 
     // Register editor modules
     Quill.register('modules/imageResize', ImageResize)
+    Quill.register('modules/imageDrop', ImageDrop)
 
     // Setup global helpers
     Vue.mixin({
