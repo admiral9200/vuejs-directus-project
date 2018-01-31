@@ -85,9 +85,28 @@ const actions = {
   },
 
   // Edit item in a given table
-  edit({ commit }, { table, id, column, content }) {
+  edit({ commit, dispatch }, { table, id, column, content }) {
     const index = state.fetched[table].data.findIndex(el => el.id === id)
     commit('EDIT', { table, column, index, content })
+    dispatch('commit', {
+      table,
+      id
+    })
+  },
+
+  // Resort items
+  sort({ commit, dispatch }, { table }) {
+    const items = state.fetched[table].data
+    items.forEach((item, index) => {
+      if (item.sort !== index) {
+        dispatch('edit', {
+          table,
+          id: item.id,
+          column: 'sort',
+          content: index
+        })
+      }
+    })
   },
 
   // Commit item (ready for pushing)
@@ -131,8 +150,12 @@ const actions = {
 
 const getters = {
   status: state => state.status,
-  data(state) {
+  items(state) {
     return table => (state.fetched[table] ? state.fetched[table].data : [])
+  },
+  item(state) {
+    return (table, id) =>
+      state.fetched[table] ? state.fetched[table].data.filter(el => el.id === id)[0] : undefined
   }
 }
 

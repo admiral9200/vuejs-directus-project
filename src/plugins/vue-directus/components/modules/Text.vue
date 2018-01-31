@@ -69,10 +69,6 @@ export default {
           column: this.$props.column,
           content: html
         })
-        this.$store.dispatch('VueDirectus/items/commit', {
-          table: this.$parent.$props.table,
-          id: this.$parent.$props.id
-        })
       } else {
         this.$store.dispatch('VueDirectus/items/undo', {
           table: this.$parent.$props.table,

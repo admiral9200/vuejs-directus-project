@@ -4,6 +4,7 @@
       <slot />
     </div>
     <div class="vue-directus-item__controls">
+      <button class="dragula-handle" v-if="$parent.$props.sortable">m</button>
       <button @click="remove">X</button>
     </div>
   </div>

@@ -1,3 +1,4 @@
+import VueDragula from 'vue-dragula'
 import VueQuillEditor, { Quill } from 'vue-quill-editor'
 import ImageResize from 'quill-image-resize-module'
 import { ImageDrop } from 'quill-image-drop-module'
@@ -27,6 +28,9 @@ const VueDirectus = {
         settings: AppStore.settings
       }
     })
+
+    // Mount dragula as global component
+    Vue.use(VueDragula)
 
     // Mount editor as global component
     Vue.use(VueQuillEditor)

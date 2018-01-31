@@ -1,6 +1,6 @@
 <template>
   <div class="vue-directus-collection">
-    <div class="vue-directus-collection__slot">
+    <div class="vue-directus-collection__slot" v-dragula="items(table)" :bag="table">
       <slot />
     </div>
     <div class="vue-directus-collection__controls">
@@ -10,6 +10,9 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'VueDirectusCollection',
 
@@ -21,7 +24,30 @@ export default {
     payload: {
       type: Object,
       default: () => {}
+    },
+    sortable: {
+      type: Boolean,
+      default: false
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      items: 'VueDirectus/items/items'
+    })
+  },
+
+  created() {
+    Vue.vueDragula.options('projects', {
+      moves: (el, container, handle) =>
+        this.$props.sortable && handle.classList.contains('dragula-handle')
+    })
+
+    Vue.vueDragula.eventBus.$on('dropModel', args => {
+      this.$store.dispatch('VueDirectus/items/sort', {
+        table: this.$props.table
+      })
+    })
   },
 
   methods: {
