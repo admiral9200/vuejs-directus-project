@@ -3,7 +3,7 @@
     <vue-directus-app>
       <h1>Vue Directus Collection `projects`</h1>
       <vue-directus-collection>
-        <vue-directus-item v-for="project in itemsByTable('projects')" :key="project.id">
+        <vue-directus-item v-for="project in items('projects')" :key="project.id">
           <h2>{{ project.name }}</h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis molestie ipsum.</p>
         </vue-directus-item>
@@ -20,17 +20,20 @@ export default {
 
   computed: {
     ...mapGetters({
-      itemsByTable: 'VueDirectus/items/itemsByTable'
+      settings: 'VueDirectus/settings/all',
+      items: 'VueDirectus/items/table'
     })
   },
 
   created() {
-    this.fetch('projects')
+    this.fetchSettings()
+    this.fetchItems('projects')
   },
 
   methods: {
     ...mapActions({
-      fetch: 'VueDirectus/items/fetch'
+      fetchSettings: 'VueDirectus/settings/fetch',
+      fetchItems: 'VueDirectus/items/fetch'
     })
   }
 }

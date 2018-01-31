@@ -22,7 +22,7 @@ const actions = {
         return commit('FETCH', { ...state.fetched, [table]: resp })
       })
       .catch(() => {
-        throw Error('Failed to fetch items from directus backend')
+        throw Error(`Failed to fetch items from table '${table}'`)
       })
   }
 }
@@ -30,7 +30,7 @@ const actions = {
 const getters = {
   // Get all items by table and return
   // a function so we can pass table name as an argument
-  itemsByTable(state) {
+  table(state) {
     return table => (state.fetched[table] ? state.fetched[table].data : [])
   }
 }
