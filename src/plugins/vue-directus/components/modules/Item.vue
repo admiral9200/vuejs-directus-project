@@ -60,7 +60,7 @@ export default {
 
 .vue-directus-item__controls {
   position: absolute;
-  right: -50px;
+  right: 50px;
   top: 0;
 }
 </style>
