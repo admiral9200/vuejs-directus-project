@@ -1,7 +1,7 @@
 {
-  "name": "vue-playground",
+  "name": "vue-directus",
   "version": "1.0.0",
-  "description": "Custom Vue.js boilerplate project to play with.",
+  "description": "A Vue.js plugin for front-end content editing.",
   "author": "Oskar Rainer",
   "private": true,
   "browserslist": [
