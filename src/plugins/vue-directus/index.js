@@ -14,8 +14,8 @@ const VueDirectus = {
       throw Error('VueDirectus requires the directus javascript sdk.')
     }
 
-    if (!VueQuillEditor) {
-      throw Error('VueDirectus requires the quill editor.')
+    if (!VueQuillEditor || !ImageResize || !ImageDrop) {
+      throw Error('VueDirectus requires the quill editor and its image resize and drop modules.')
     }
 
     // Register store module
