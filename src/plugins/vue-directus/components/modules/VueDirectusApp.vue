@@ -4,7 +4,7 @@
       <slot />
     </div>
     <div class="vue-directus-app__controls">
-      vue-directus-app__controls
+      <button>SAVE</button>
     </div>
   </div>
 </template>
