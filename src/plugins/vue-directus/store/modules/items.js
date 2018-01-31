@@ -14,14 +14,12 @@ const mutations = {
 }
 
 const actions = {
-  // Fetch item by table and
-  // save items with table name as key
+  // Fetch items by table and save them all
+  // in a new object with table name as key
   async fetch({ commit }, table) {
     await VueDirectusApi.getItems(table)
       .then(resp => {
-        const data = {}
-        data[table] = resp
-        return commit('FETCH', data)
+        return commit('FETCH', { ...state.fetched, [table]: resp })
       })
       .catch(() => {
         throw Error('Failed to fetch items from directus backend')
