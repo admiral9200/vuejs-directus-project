@@ -1,5 +1,6 @@
 import VueDirectusApi from './api'
 import * as VueDirectusStore from './store'
+import * as VueDirectusComponents from './components'
 
 const VueDirectus = {
   install(Vue, { store }) {
@@ -14,12 +15,13 @@ const VueDirectus = {
     // Register new store module
     store.registerModule('VueDirectus', {
       namespaced: true,
-      modules: {
-        settings: VueDirectusStore.settings,
-        users: VueDirectusStore.users,
-        items: VueDirectusStore.items
-      }
+      modules: { ...VueDirectusStore }
     })
+
+    // Register components
+    Object.entries(VueDirectusComponents).forEach(([name, component]) =>
+      Vue.component(name, component)
+    )
   }
 }
 

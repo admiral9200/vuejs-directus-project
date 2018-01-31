@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    app
+    <vue-directus-app>
+      vue-directus-app
+    </vue-directus-app>
   </div>
 </template>
 
