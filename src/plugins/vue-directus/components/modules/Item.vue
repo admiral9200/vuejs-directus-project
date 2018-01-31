@@ -56,10 +56,6 @@ export default {
   position: relative;
 }
 
-.vue-directus-item:hover .vue-directus-item__controls {
-  display: block;
-}
-
 .vue-directus-item[disabled] {
   opacity: 0.5;
   pointer-events: none;
@@ -75,5 +71,9 @@ export default {
   padding-left: 50px;
   top: 0;
   right: 0;
+}
+
+.vue-directus-item:hover .vue-directus-item__controls {
+  display: block;
 }
 </style>

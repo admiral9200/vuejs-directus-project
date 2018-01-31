@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-directus-collection">
+  <div class="vue-directus-collection" :class="{ 'dragging': dragging }">
     <div class="vue-directus-collection__slot" v-dragula="items(table)" :bag="table">
       <slot />
     </div>
@@ -31,6 +31,12 @@ export default {
     }
   },
 
+  data() {
+    return {
+      dragging: false
+    }
+  },
+
   computed: {
     ...mapGetters({
       items: 'VueDirectus/items/items'
@@ -41,6 +47,14 @@ export default {
     Vue.vueDragula.options(this.$props.table, {
       moves: (el, container, handle) =>
         this.$props.sortable && handle.classList.contains('dragula-handle')
+    })
+
+    Vue.vueDragula.eventBus.$on('drag', args => {
+      this.dragging = true
+    })
+
+    Vue.vueDragula.eventBus.$on('dragend', args => {
+      this.dragging = false
     })
 
     Vue.vueDragula.eventBus.$on('dropModel', args => {
@@ -75,5 +89,13 @@ export default {
 
 .gu-transit {
   opacity: 0.5;
+}
+
+.vue-directus-collection.dragging .vue-directus-item .vue-directus-item__controls {
+  display: none;
+}
+
+.vue-directus-collection .gu-transit .vue-directus-item .vue-directus-item__controls {
+  display: block;
 }
 </style>
