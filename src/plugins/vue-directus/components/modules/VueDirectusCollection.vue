@@ -4,14 +4,29 @@
       <slot />
     </div>
     <div class="vue-directus-collection__controls">
-      <button>+</button>
+      <button @click="addItem(table)">+</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'VueDirectusCollection'
+  name: 'VueDirectusCollection',
+
+  props: {
+    table: {
+      type: String,
+      default: ''
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      addItem: 'VueDirectus/items/add'
+    })
+  }
 }
 </script>
 
