@@ -35,8 +35,12 @@ export default {
           imageResize: {
             modules: ['Resize', 'DisplaySize', 'Toolbar']
           },
+          clipboard: {
+            matchVisual: false
+          },
           toolbar: this.$props.html
             ? [
+                [{ header: [1, 2, false] }],
                 ['bold', 'italic'],
                 [{ color: [] }, { background: [] }],
                 [{ align: [] }],
