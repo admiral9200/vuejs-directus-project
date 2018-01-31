@@ -13,7 +13,7 @@
           <div v-for="project in data('projects')" :key="project.id">
             <vue-directus-item table="projects" :id="project.id">
               <vue-directus-text column="name" :content="project.name" />
-              <vue-directus-text column="description" :content="project.description" />
+              <vue-directus-text html="true" column="description" :content="project.description" />
             </vue-directus-item>
           </div>
         </vue-directus-collection>

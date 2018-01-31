@@ -9,6 +9,10 @@ export default {
   name: 'VueDirectusText',
 
   props: {
+    html: {
+      type: Boolean,
+      default: false
+    },
     content: {
       type: String,
       default: ''
@@ -30,13 +34,15 @@ export default {
           imageResize: {
             modules: ['Resize', 'DisplaySize', 'Toolbar']
           },
-          toolbar: [
-            ['bold', 'italic'],
-            [{ color: [] }, { background: [] }],
-            [{ align: [] }],
-            ['link', 'image'],
-            ['clean']
-          ]
+          toolbar: this.$props.html
+            ? [
+                ['bold', 'italic'],
+                [{ color: [] }, { background: [] }],
+                [{ align: [] }],
+                ['link', 'image'],
+                ['clean']
+              ]
+            : false
         }
       }
     }
