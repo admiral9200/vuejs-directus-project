@@ -28,12 +28,12 @@ const VueDirectus = {
       }
     })
 
+    // Mount editor as global component
+    Vue.use(VueQuillEditor)
+
     // Require editor styles
     require('./assets/css/lib/quill.core.css')
     require('./assets/css/lib/quill.theme.css')
-
-    // Mount editor as global component
-    Vue.use(VueQuillEditor)
 
     // Register editor modules
     Quill.register('modules/imageResize', ImageResize)
