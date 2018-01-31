@@ -9,11 +9,11 @@
       </section>
       <section>
         <h1>Table `projects`</h1>
-        <vue-directus-collection table="projects" :sortable="true" :payload="{ name: 'Placeholder', status: 1 }">
+        <vue-directus-collection table="projects" :sortable="true" :payload="{ name: 'Enter a project name...', description: 'Enter a project description...', status: 1 }">
           <div v-for="project in items('projects')" :key="project.id">
             <vue-directus-item table="projects" :id="project.id">
               <vue-directus-text column="name" :content="project.name" />
-              <vue-directus-text :html="true" column="description" :content="project.description" />
+              <vue-directus-text column="description" :content="project.description" :html="true" />
             </vue-directus-item>
           </div>
         </vue-directus-collection>

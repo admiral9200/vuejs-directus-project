@@ -4,7 +4,7 @@
       <slot />
     </div>
     <div class="vue-directus-item__controls">
-      <button class="dragula-handle" v-if="$parent.$props.sortable">M</button>
+      <button class="dragula-handle" v-if="sortable">M</button>
       <button @click="remove">X</button>
     </div>
   </div>
@@ -24,6 +24,12 @@ export default {
     id: {
       type: Number,
       default: undefined
+    }
+  },
+
+  data() {
+    return {
+      sortable: this.$parent.$props.sortable
     }
   },
 
@@ -50,6 +56,10 @@ export default {
   position: relative;
 }
 
+.vue-directus-item:hover .vue-directus-item__controls {
+  display: block;
+}
+
 .vue-directus-item[disabled] {
   opacity: 0.5;
   pointer-events: none;
@@ -60,8 +70,10 @@ export default {
 }
 
 .vue-directus-item__controls {
+  display: none;
   position: absolute;
-  right: 50px;
+  padding-left: 50px;
   top: 0;
+  right: 0;
 }
 </style>

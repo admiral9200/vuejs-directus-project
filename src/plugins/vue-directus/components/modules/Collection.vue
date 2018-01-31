@@ -38,7 +38,7 @@ export default {
   },
 
   created() {
-    Vue.vueDragula.options('projects', {
+    Vue.vueDragula.options(this.$props.table, {
       moves: (el, container, handle) =>
         this.$props.sortable && handle.classList.contains('dragula-handle')
     })
@@ -71,5 +71,9 @@ export default {
   position: absolute;
   text-align: center;
   width: 100%;
+}
+
+.gu-transit {
+  opacity: 0.5;
 }
 </style>
