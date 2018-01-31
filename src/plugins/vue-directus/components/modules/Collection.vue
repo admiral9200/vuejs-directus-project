@@ -87,10 +87,6 @@ export default {
   width: 100%;
 }
 
-.gu-transit {
-  opacity: 0.5;
-}
-
 .vue-directus-collection.dragging .vue-directus-item .vue-directus-item__controls {
   display: none;
 }

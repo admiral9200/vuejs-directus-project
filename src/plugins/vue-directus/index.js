@@ -32,6 +32,9 @@ const VueDirectus = {
     // Mount dragula as global component
     Vue.use(VueDragula)
 
+    // Require dragula styles
+    require('dragula/dist/dragula.css')
+
     // Mount editor as global component
     Vue.use(VueQuillEditor)
 
