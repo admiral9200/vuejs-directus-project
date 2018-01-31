@@ -150,12 +150,8 @@ const actions = {
 
 const getters = {
   status: state => state.status,
-  items(state) {
+  itemsByTable(state) {
     return table => (state.fetched[table] ? state.fetched[table].data : [])
-  },
-  item(state) {
-    return (table, id) =>
-      state.fetched[table] ? state.fetched[table].data.filter(el => el.id === id)[0] : undefined
   }
 }
 

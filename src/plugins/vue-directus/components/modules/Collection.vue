@@ -1,6 +1,6 @@
 <template>
   <div class="vue-directus-collection" :class="{ 'dragging': dragging }">
-    <div class="vue-directus-collection__slot" v-dragula="items(table)" :bag="table">
+    <div class="vue-directus-collection__slot" v-dragula="itemsByTable(table)" :bag="table">
       <slot />
     </div>
     <div class="vue-directus-collection__controls">
@@ -39,7 +39,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      items: 'VueDirectus/items/items'
+      itemsByTable: 'VueDirectus/items/itemsByTable'
     })
   },
 

@@ -10,7 +10,7 @@
       <section>
         <h1>Table `projects`</h1>
         <vue-directus-collection table="projects" :sortable="true" :payload="{ name: 'Enter a project name...', description: 'Enter a project description...', status: 1 }">
-          <div v-for="project in items('projects')" :key="project.id">
+          <div v-for="project in itemsByTable('projects')" :key="project.id">
             <vue-directus-item table="projects" :id="project.id">
               <vue-directus-text column="name" :content="project.name" />
               <vue-directus-text column="description" :content="project.description" :html="true" />
@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapGetters({
       settings: 'VueDirectus/settings/directus',
-      items: 'VueDirectus/items/items'
+      itemsByTable: 'VueDirectus/items/itemsByTable'
     })
   },
 
