@@ -1,12 +1,10 @@
 import Vue from 'vue'
 import App from '@/App'
-import VueDirectus from '@/plugins/vue-directus'
 import store from '@/store'
-import client from '@/api'
+
+import 'reset-css/reset.css'
 
 Vue.config.productionTip = false
-
-Vue.use(VueDirectus, { store, client })
 
 new Vue({
   el: '#app',
