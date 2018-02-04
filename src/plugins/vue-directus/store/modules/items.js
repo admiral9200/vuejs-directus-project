@@ -35,11 +35,9 @@ const actions = {
   async add({ commit, getters }, table) {
     const items = getters.table(table)
 
-    // Get the most recent item
-    let item = _.last(items)
-
-    // Clone the item, remove id and reset sort value
-    let clone = _.cloneWith(item, value => {
+    // Get the most recent item & clone it
+    // than remove id and reset sort value
+    let clone = _.cloneWith(_.last(items), value => {
       delete value.id
       value.sort = 0
     })
