@@ -1,4 +1,5 @@
 /* eslint-disable padding-line-between-statements */
+import _ from 'lodash'
 import VueDirectusApi from '../../api'
 
 const namespaced = true
@@ -34,17 +35,17 @@ const actions = {
   async add({ commit, getters }, table) {
     const items = getters.table(table)
 
-    // Clone last item
-    let template = { ...items.slice(-1).pop() }
+    // Get the most recent item
+    let item = items.slice(-1).pop()
 
-    // Delete the old ID
-    delete template.id
-
-    // Add new item to the top of sorting order
-    template.sort = 0
+    // Clone the item, remove id and reset sort value
+    let clone = _.cloneWith(item, value => {
+      delete value.id
+      value.sort = 0
+    })
 
     // Create item and commit it to the fetched items
-    await VueDirectusApi.createItem(table, template)
+    await VueDirectusApi.createItem(table, clone)
       .then(resp => {
         return commit('ADD', { table, payload: resp.data })
       })
