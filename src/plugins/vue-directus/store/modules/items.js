@@ -77,12 +77,18 @@ const actions = {
       })
   },
 
-  // Sort items based on its current position in fetched items
-  // by settings the obj.sort value to the current array index
+  // FIXME: Why is the state not updating positions by itself?
+  // Why do we have to manually replace items with new sorting?
+
+  // Sort items based on its current
+  // position in fetched items
   sort({ commit, getters }, table) {
     const items = getters.table(table)
 
+    // Set items sort value to its current index in the array
     _.each(items, (o, index) => (o.sort = index))
+
+    // Replaces all items in given table
     commit('SORT', { table, items })
   }
 }
