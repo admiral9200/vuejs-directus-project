@@ -4,8 +4,8 @@
       <slot />
     </div>
     <div class="vue-directus-item__controls">
-      <button>M</button>
-      <button @click="removeItem({ table, id })">X</button>
+      <button class="vue-directus-item__controls__move">M</button>
+      <button class="vue-directus-item__controls__remove" @click="removeItem({ table, id })">X</button>
     </div>
   </div>
 </template>

@@ -19,6 +19,10 @@ const mutations = {
 
   DELETE: (state, { table, index }) => {
     state.fetched[table].data.splice(index, 1)
+  },
+
+  SORT: (state, { table, items }) => {
+    state.fetched[table].data = items
   }
 }
 
@@ -71,6 +75,15 @@ const actions = {
       .catch(() => {
         throw Error(`Failed to delete item '${id}' from table '${table}'`)
       })
+  },
+
+  // Sort items based on its current position in fetched items
+  // by settings the obj.sort value to the current array index
+  sort({ commit, getters }, table) {
+    const items = getters.table(table)
+
+    _.each(items, (o, index) => (o.sort = index))
+    commit('SORT', { table, items })
   }
 }
 
