@@ -58,12 +58,12 @@ const actions = {
   },
 
   // Remove an item from the fetched items
-  // and delete it from the server
+  // and remove it from the server
   async remove({ commit }, { table, id }) {
     const index = _.findKey(state.fetched[table].data, o => o.id === id)
 
-    // Delete item from fetched objects as soon as
-    // it is deleted on the server
+    // Delete item from fetched items as soon as
+    // it is deleted from the server
     await VueDirectusApi.deleteItem(table, id)
       .then(resp => {
         return commit('DELETE', { table, index })
