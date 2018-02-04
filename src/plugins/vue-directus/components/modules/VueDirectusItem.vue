@@ -5,14 +5,33 @@
     </div>
     <div class="vue-directus-item__controls">
       <button>M</button>
-      <button>X</button>
+      <button @click="removeItem({ table, id })">X</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'VueDirectusItem'
+  name: 'VueDirectusItem',
+
+  props: {
+    table: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: Number,
+      default: undefined
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      removeItem: 'VueDirectus/items/remove'
+    })
+  }
 }
 </script>
 

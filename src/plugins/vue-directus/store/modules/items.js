@@ -12,8 +12,13 @@ const mutations = {
   FETCH: (state, payload) => {
     state.fetched = payload
   },
+
   ADD: (state, { table, payload }) => {
     state.fetched[table].data.push(payload)
+  },
+
+  DELETE: (state, { table, index }) => {
+    state.fetched[table].data.splice(index, 1)
   }
 }
 
@@ -37,7 +42,7 @@ const actions = {
 
     // Get the most recent item & clone it
     // than remove id and reset sort value
-    let clone = _.cloneWith(_.last(items), value => {
+    const clone = _.cloneWith(_.last(items), value => {
       delete value.id
       value.sort = 0
     })
@@ -49,6 +54,22 @@ const actions = {
       })
       .catch(() => {
         throw Error(`Failed to add item to table '${table}'`)
+      })
+  },
+
+  // Remove an item from the fetched items
+  // and delete it from the server
+  async remove({ commit }, { table, id }) {
+    const index = _.findKey(state.fetched[table].data, o => o.id === id)
+
+    // Delete item from fetched objects as soon as
+    // it is deleted on the server
+    await VueDirectusApi.deleteItem(table, id)
+      .then(resp => {
+        return commit('DELETE', { table, index })
+      })
+      .catch(() => {
+        throw Error(`Failed to delete item '${id}' from table '${table}'`)
       })
   }
 }

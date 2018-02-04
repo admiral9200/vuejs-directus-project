@@ -3,7 +3,7 @@
     <vue-directus-app>
       <h1>Vue Directus Collection `projects`</h1>
       <vue-directus-collection table="projects">
-        <vue-directus-item v-for="project in items('projects')" :key="project.id">
+        <vue-directus-item v-for="project in items('projects')" table="projects" :id="project.id" :key="project.id">
           <h2>{{ project.name }}</h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis molestie ipsum.</p>
         </vue-directus-item>
