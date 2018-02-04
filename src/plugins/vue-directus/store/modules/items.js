@@ -31,7 +31,7 @@ const actions = {
   },
 
   // Add item by cloning the last fetched item
-  // as template and push it to the fetched items
+  // and commit it to the fetched items
   async add({ commit, getters }, table) {
     const items = getters.table(table)
 
