@@ -36,7 +36,7 @@ const actions = {
     const items = getters.table(table)
 
     // Get the most recent item
-    let item = items.slice(-1).pop()
+    let item = _.last(items)
 
     // Clone the item, remove id and reset sort value
     let clone = _.cloneWith(item, value => {
