@@ -22,7 +22,7 @@ export default {
       default: ''
     },
     id: {
-      type: Number,
+      type: String,
       default: undefined
     }
   },
