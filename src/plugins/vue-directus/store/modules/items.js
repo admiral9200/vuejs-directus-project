@@ -44,6 +44,12 @@ const actions = {
   async add({ commit, getters }, table) {
     const items = getters.table(table)
 
+    // We need at least one item in the collection
+    // in order to be able to clone it
+    if (_.isEmpty(items)) {
+      throw Error('Failed to add item. Make sure the collection contains at least one item.')
+    }
+
     // Get the most recent item & clone it
     // than remove id and reset sort value
     const clone = _.cloneWith(_.last(items), value => {
