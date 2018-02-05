@@ -4,20 +4,27 @@
       <slot />
     </div>
     <div class="vue-directus-app__controls" v-if="diff.length > 0">
-      <button>SAVE</button>
+      <button @click="save" :disabled="busy">SAVE</button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'VueDirectusApp',
 
   computed: {
     ...mapGetters({
+      busy: 'VueDirectus/items/busy',
       diff: 'VueDirectus/items/diff'
+    })
+  },
+
+  methods: {
+    ...mapActions({
+      save: 'VueDirectus/items/save'
     })
   }
 }

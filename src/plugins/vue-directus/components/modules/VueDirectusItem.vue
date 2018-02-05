@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-directus-item">
+  <div class="vue-directus-item" :disabled="busy">
     <div class="vue-directus-item__slot">
       <slot />
     </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'VueDirectusItem',
@@ -27,6 +27,12 @@ export default {
     }
   },
 
+  computed: {
+    ...mapGetters({
+      busy: 'VueDirectus/items/busy'
+    })
+  },
+
   methods: {
     ...mapActions({
       removeItem: 'VueDirectus/items/remove'
@@ -38,6 +44,11 @@ export default {
 <style>
 .vue-directus-item {
   position: relative;
+}
+
+.vue-directus-item[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .vue-directus-item__controls {

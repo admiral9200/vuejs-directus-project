@@ -5,17 +5,22 @@ import VueDirectusApi from '../../api'
 const namespaced = true
 
 const state = {
+  busy: false,
   remote: {},
   local: {}
 }
 
 const mutations = {
-  SAVE_REMOTE: (state, { table, resp }) => {
-    state.remote[table] = _.cloneDeep(resp)
+  BUSY: (state, payload) => {
+    state.busy = payload
   },
 
-  SAVE_LOCAL: (state, { table, resp }) => {
-    state.local = { ...state.local, [table]: resp }
+  SAVE: (state, { table, resp }) => {
+    state.remote = { ...state.remote, [table]: resp }
+  },
+
+  SYNC: state => {
+    state.local = _.cloneDeep(state.remote)
   },
 
   ADD: (state, { table, payload }) => {
@@ -34,16 +39,19 @@ const mutations = {
 }
 
 const actions = {
-  // Fetch items by table and save & sort local and remote branch
-  // by setting each items sort value to its array index.
-  // The remote branch acts as reference point when saving modified items
+  // Sort items based on its current position in the local branch
+  sort({ commit }, table) {
+    commit('SORT', { branch: 'local', table })
+  },
+
+  // Fetch items by table and save & sort remote branch
+  // Than sync to local branch and keep remote for reference
   async fetch({ commit }, table) {
     await VueDirectusApi.getItems(table)
       .then(resp => {
-        commit('SAVE_REMOTE', { table, resp })
+        commit('SAVE', { table, resp })
         commit('SORT', { branch: 'remote', table })
-        commit('SAVE_LOCAL', { table, resp })
-        commit('SORT', { branch: 'local', table })
+        commit('SYNC')
         return true
       })
       .catch(() => {
@@ -52,7 +60,6 @@ const actions = {
   },
 
   // Add item by cloning the last local item
-  // and commit it to the local and remote branch
   async add({ commit, getters }, table) {
     const items = getters.table(table)
 
@@ -66,7 +73,7 @@ const actions = {
     delete clone.id
     clone.sort += 1
 
-    // Create item and commit it to the local and remote branch
+    // Create item and save it in the remote & local branch
     await VueDirectusApi.createItem(table, clone)
       .then(resp => {
         return commit('ADD', { table, payload: resp.data })
@@ -76,13 +83,11 @@ const actions = {
       })
   },
 
-  // Remove an item from the server and than
-  // remove it from the local and remote branch
+  // Remove an item
   async remove({ commit }, { table, id }) {
     const index = _.findKey(state.local[table].data, obj => obj.id === id)
 
-    // Delete item from local branch as soon as
-    // it is deleted from the server
+    // Delete item and remove it from the remote & local branch
     await VueDirectusApi.deleteItem(table, id)
       .then(resp => {
         return commit('DELETE', { table, index })
@@ -92,14 +97,35 @@ const actions = {
       })
   },
 
-  // Sort items based on its current
-  // position in local branch
-  sort({ commit }, table) {
-    commit('SORT', { branch: 'local', table })
+  // Save all items that were modified in the local branch
+  async save({ commit, getters }) {
+    const diff = getters.diff
+    await _.each(diff, async obj => {
+      const table = _.keys(obj)[0]
+      const items = obj[table]
+
+      // Disable race conditions when saving
+      commit('BUSY', true)
+
+      // Await update resp from serv and than re-sync remote branch
+      await VueDirectusApi.updateBulk(table, items)
+        .then(resp => {
+          return commit('BUSY', false)
+        })
+        .catch(() => {
+          throw Error(`Failed to save items to table '${table}'`)
+        })
+
+      // Sync local to remote branch
+      commit('SYNC')
+    })
   }
 }
 
 const getters = {
+  // Get current status
+  busy: state => state.busy,
+
   // Get items for given table
   table(state) {
     return table => (state.local[table] ? state.local[table].data : [])
@@ -113,10 +139,11 @@ const getters = {
       if (state.local[key] && state.remote[key]) {
         const diff = _.differenceWith(state.local[key].data, state.remote[key].data, _.isEqual)
         if (diff.length > 0) {
-          changed.push(diff)
+          changed.push({ [key]: diff })
         }
       }
     })
+
     return changed
   }
 }
