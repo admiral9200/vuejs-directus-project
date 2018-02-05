@@ -1,10 +1,10 @@
 <template>
-  <div class="vue-directus-app">
+  <div class="vue-directus-app" :data-busy="busy">
     <div class="vue-directus-app__slot">
       <slot />
     </div>
-    <div class="vue-directus-app__controls" v-if="diff.length > 0">
-      <button @click="save" :disabled="busy">SAVE</button>
+    <div class="vue-directus-app__controls">
+      <button @click="save" :disabled="busy" v-if="diff.length > 0">SAVE</button>
     </div>
   </div>
 </template>
@@ -31,6 +31,15 @@ export default {
 </script>
 
 <style>
+.vue-directus-app {
+  position: relative;
+}
+
+.vue-directus-app[data-busy='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .vue-directus-app__controls {
   bottom: 20px;
   position: fixed;
