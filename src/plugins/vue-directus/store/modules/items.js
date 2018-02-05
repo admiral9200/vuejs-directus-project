@@ -29,6 +29,10 @@ const mutations = {
     })
   },
 
+  SORT: (state, table) => {
+    _.each(state.local[table].data, (obj, index) => (obj.sort = index))
+  },
+
   SYNC: state => {
     state.local = _.cloneDeep(state.remote)
   },
@@ -64,6 +68,13 @@ const actions = {
       })
   },
 
+  // Apply sorting to all items
+  sort({ commit }, table) {
+    commit('BUSY', true)
+    commit('SORT', table)
+    commit('BUSY', false)
+  },
+
   // Add item to local branch
   add({ commit, getters }, table) {
     commit('BUSY', true)
@@ -76,8 +87,9 @@ const actions = {
     item._id = setInternalId()
     item.sort += 1
 
-    // Add new item to local branch
+    // Add new item to local branch & sort branch
     commit('ADD', { table, item })
+    commit('SORT', table)
 
     return commit('BUSY', false)
   },
@@ -89,8 +101,9 @@ const actions = {
     // Get the item´s index
     const index = parseInt(_.findKey(state.local[table].data, obj => obj._id === id))
 
-    // Remove item from local branch
+    // Remove item from local branch & sort branch
     commit('REMOVE', { table, index })
+    commit('SORT', table)
 
     return commit('BUSY', false)
   }

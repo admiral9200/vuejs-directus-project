@@ -40,11 +40,15 @@ export default {
     Vue.vueDragula.options(this.table, {
       moves: (el, container, handle) => this.canMove(handle)
     })
+    Vue.vueDragula.eventBus.$on('dropModel', () => {
+      this.sort(this.table)
+    })
   },
 
   methods: {
     ...mapActions({
-      add: 'VueDirectus/items/add'
+      add: 'VueDirectus/items/add',
+      sort: 'VueDirectus/items/sort'
     }),
     canMove(handle) {
       return this.sortable && handle.classList.contains('vue-directus-item__controls__move')
