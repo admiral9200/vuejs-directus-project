@@ -3,15 +3,23 @@
     <div class="vue-directus-app__slot">
       <slot />
     </div>
-    <div class="vue-directus-app__controls">
+    <div class="vue-directus-app__controls" v-if="diff.length > 0">
       <button>SAVE</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'VueDirectusApp'
+  name: 'VueDirectusApp',
+
+  computed: {
+    ...mapGetters({
+      diff: 'VueDirectus/items/diff'
+    })
+  }
 }
 </script>
 

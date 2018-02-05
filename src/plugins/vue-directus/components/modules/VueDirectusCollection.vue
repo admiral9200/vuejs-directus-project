@@ -40,7 +40,9 @@ export default {
     Vue.vueDragula.options(this.table, {
       moves: (el, container, handle) => this.canMove(handle)
     })
-    Vue.vueDragula.eventBus.$on('dropModel', () => this.sort(this.table))
+    Vue.vueDragula.eventBus.$on('dropModel', () => {
+      this.sort(this.table)
+    })
   },
 
   methods: {
