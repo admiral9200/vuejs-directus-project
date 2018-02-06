@@ -21,6 +21,10 @@ export default {
       type: String,
       default: ''
     },
+    placeholder: {
+      type: String,
+      default: ''
+    },
     html: {
       type: Boolean,
       default: false
@@ -31,7 +35,7 @@ export default {
     return {
       options: {
         theme: 'bubble',
-        placeholder: 'Enter some text...',
+        placeholder: this.placeholder || 'Enter some text...',
         modules: {
           imageDrop: true,
           imageResize: {

@@ -4,7 +4,7 @@
       <h1>Vue Directus Collection `projects`</h1>
       <vue-directus-collection table="projects" :sortable="true">
         <vue-directus-item v-for="project in items('projects')" table="projects" :id="project._id" :key="project._id">
-          <vue-directus-text :column="'name'" :text="project.name" />
+          <vue-directus-text :column="'name'" :placeholder="'Placeholder test...'" :text="project.name" />
           <vue-directus-text :html="true" :column="'description'" :text="project.description" />
         </vue-directus-item>
       </vue-directus-collection>
