@@ -43,7 +43,7 @@ const VueDirectus = {
       if (
         mutation.type.includes('items/') &&
         !mutation.type.includes('items/BUSY') &&
-        !mutation.type.includes('items/SORT')
+        !mutation.type.includes('items/RESORT')
       ) {
         done.push(mutation)
       }

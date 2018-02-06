@@ -32,6 +32,12 @@ const mutations = {
     _.each(state.local[table].data, (obj, index) => (obj.sort = index))
   },
 
+  // Resorts are triggered after adding/removing items and they
+  // wont be tracked by the store subscription in the `undo` function
+  RESORT: (state, table) => {
+    _.each(state.local[table].data, (obj, index) => (obj.sort = index))
+  },
+
   ADD: (state, { table, item }) => {
     state.local[table].data.push(item)
   },
@@ -82,7 +88,7 @@ const actions = {
 
     // Push new item to local branch & resort table
     commit('ADD', { table, item })
-    commit('SORT', table)
+    commit('RESORT', table)
     commit('BUSY', false)
   },
 
@@ -96,7 +102,7 @@ const actions = {
 
     // Remove item from local branch & resort table
     commit('REMOVE', { table, index })
-    commit('SORT', table)
+    commit('RESORT', table)
     commit('BUSY', false)
   },
 
