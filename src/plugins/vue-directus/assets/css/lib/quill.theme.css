@@ -203,6 +203,12 @@
 .ql-bubble .ql-direction.ql-active svg:first-child {
   display: none;
 }
+.ql-bubble .ql-editor strong {
+  font-weight: bold;
+}
+.ql-bubble .ql-editor em {
+  font-style: italic;
+}
 .ql-bubble .ql-editor h1 {
   font-size: 2em;
 }
