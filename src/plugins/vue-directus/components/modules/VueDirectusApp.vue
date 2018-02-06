@@ -5,6 +5,7 @@
     </div>
     <div class="vue-directus-app__controls">
       <button @click="save" :disabled="busy" v-if="modified">SAVE</button>
+      <button @click="undo" :disabled="busy" v-if="modified">UNDO</button>
     </div>
   </div>
 </template>
@@ -25,6 +26,7 @@ export default {
 
   methods: {
     ...mapActions({
+      undo: 'VueDirectus/undo',
       save: 'VueDirectus/items/save'
     })
   }

@@ -16,7 +16,7 @@ const mutations = {
     state.busy = payload
   },
 
-  SAVE: (state, { table, resp }) => {
+  FETCH: (state, { table, resp }) => {
     _.each(resp.data, (obj, index) => {
       obj.sort = index
       obj._id = shortid()
@@ -56,7 +56,7 @@ const actions = {
     commit('BUSY', true)
     return VueDirectusApi.getItems(table)
       .then(resp => {
-        commit('SAVE', { table, resp })
+        commit('FETCH', { table, resp })
         commit('SYNC')
         commit('BUSY', false)
         return true
