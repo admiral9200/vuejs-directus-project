@@ -42,6 +42,14 @@ const mutations = {
 }
 
 const actions = {
+  // Apply sorting by setting item.sort
+  // to its current array index
+  sort({ commit }, table) {
+    commit('BUSY', true)
+    commit('SORT', table)
+    commit('BUSY', false)
+  },
+
   // Connect to backend and save results in local branch
   // and apply sorting and internal _ID to all items
   async fetch({ commit }, table) {
@@ -56,14 +64,6 @@ const actions = {
       .catch(() => {
         throw Error(`Failed to fetch items from table '${table}'`)
       })
-  },
-
-  // Apply sorting by setting item.sort
-  // to its current array index
-  sort({ commit }, table) {
-    commit('BUSY', true)
-    commit('SORT', table)
-    commit('BUSY', false)
   },
 
   // Add item to local branch by cloning
@@ -83,7 +83,6 @@ const actions = {
     // Push new item to local branch & resort table
     commit('ADD', { table, item })
     commit('SORT', table)
-
     commit('BUSY', false)
   },
 
@@ -98,36 +97,41 @@ const actions = {
     // Remove item from local branch & resort table
     commit('REMOVE', { table, index })
     commit('SORT', table)
-
     commit('BUSY', false)
   },
 
   // Save all changes from local branch in server
   // and sync with remote branch
-  save({ commit, getters, dispatch }) {
+  async save({ commit, getters, dispatch }) {
     let promise = Promise.resolve()
 
+    // Loop over all data sets in the `diff` object
     Object.entries(getters.diff).forEach(([table, set]) => {
       commit('BUSY', true)
 
+      // Delete items
       if (set.toDelete.length > 0) {
         promise = VueDirectusApi.deleteBulk(table, set.toDelete).catch(() => {
           throw Error(`Failed to delete item(s) in table '${table}'`)
         })
       }
+
+      // Create items
       if (set.toCreate.length > 0) {
         promise = VueDirectusApi.createBulk(table, set.toCreate).catch(() => {
           throw Error(`Failed to create item(s) in table '${table}'`)
         })
       }
+
+      // Update items
       if (set.toUpdate.length > 0) {
         promise = VueDirectusApi.updateBulk(table, set.toUpdate).catch(() => {
           throw Error(`Failed to update item(s) in table '${table}'`)
         })
       }
 
-      // Fetch items to sync remote and local state
-      // this also resets `busy` state
+      // Fetch recenty saved items from server to sync local
+      // and remote branch. This also sets `busy` = false
       promise.then(() => {
         dispatch('fetch', table)
         return true
