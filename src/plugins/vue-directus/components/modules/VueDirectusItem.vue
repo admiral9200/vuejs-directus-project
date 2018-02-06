@@ -40,6 +40,11 @@ export default {
   position: relative;
 }
 
+.vue-directus-item:hover {
+  background-color: #f0faff;
+  box-shadow: inset 0 0 0 1px #dcf3ff;
+}
+
 .vue-directus-item__controls {
   position: absolute;
   right: 0;

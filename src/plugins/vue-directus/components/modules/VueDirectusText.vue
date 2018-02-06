@@ -76,7 +76,7 @@ export default {
           column: this.column,
           value: this.html ? html : text
         })
-      }, 1000)
+      }, 250)
     }
   }
 }
