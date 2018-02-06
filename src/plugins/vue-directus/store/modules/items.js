@@ -46,11 +46,8 @@ const mutations = {
     state.local[table].data.splice(index, 1)
   },
 
-  EDIT: (state, { table, id, column, value }) => {
-    const item = _.find(state.local[table].data, obj => obj._id === id)
-    if (item) {
-      item[column] = value
-    }
+  EDIT: (state, { table, index, column, value }) => {
+    state.local[table].data[index][column] = value
   }
 }
 
@@ -63,7 +60,8 @@ const actions = {
 
   // Edit item content
   edit({ commit }, { table, id, column, value }) {
-    commit('EDIT', { table, id, column, value })
+    const index = _.findIndex(state.local[table].data, obj => obj._id === id)
+    commit('EDIT', { table, index, column, value })
   },
 
   // Connect to backend and save results in local branch
