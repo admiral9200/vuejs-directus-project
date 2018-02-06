@@ -58,16 +58,12 @@ const actions = {
   // Apply sorting by setting item.sort
   // to its current array index
   sort({ commit }, table) {
-    commit('BUSY', true)
     commit('SORT', table)
-    commit('BUSY', false)
   },
 
   // Edit item content
   edit({ commit }, { table, id, column, value }) {
-    commit('BUSY', true)
     commit('EDIT', { table, id, column, value })
-    commit('BUSY', false)
   },
 
   // Connect to backend and save results in local branch
@@ -167,14 +163,6 @@ const getters = {
   // Get all items in table
   table(state) {
     return table => (state.local[table] ? state.local[table].data : [])
-  },
-
-  // Get an items content by column
-  content(state) {
-    return ({ table, id, column }) => {
-      const item = _.find(state.local[table].data, obj => obj._id === id)
-      return item ? item[column] : ''
-    }
   },
 
   // Return wheter the local state contains uncommited diffs

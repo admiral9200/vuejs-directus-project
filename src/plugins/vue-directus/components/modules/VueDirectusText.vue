@@ -1,7 +1,7 @@
 <template>
   <div class="vue-directus-text">
     <div class="vue-directus-text__slot">
-      <quill-editor :content="renderedText" :options="options" @change="change($event)" @ready="ready($event)" />
+      <quill-editor :content="text" :options="options" @change="change($event)" />
     </div>
   </div>
 </template>
@@ -29,8 +29,6 @@ export default {
 
   data() {
     return {
-      rawText: '',
-      renderedText: '',
       options: {
         theme: 'bubble',
         placeholder: 'Enter some text...',
@@ -57,17 +55,10 @@ export default {
     }
   },
 
-  created() {
-    this.renderedText = this.text
-  },
-
   methods: {
     ...mapActions({
       edit: 'VueDirectus/items/edit'
     }),
-    ready(quill) {
-      this.rawText = quill.container.firstChild.innerHTML
-    },
     change({ html, text }) {
       this.edit({
         table: this.$parent.table,
