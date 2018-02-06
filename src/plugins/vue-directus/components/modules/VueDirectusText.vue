@@ -33,6 +33,7 @@ export default {
 
   data() {
     return {
+      timeout: null,
       options: {
         theme: 'bubble',
         placeholder: this.placeholder || 'Enter some text...',
@@ -64,12 +65,18 @@ export default {
       edit: 'VueDirectus/items/edit'
     }),
     change({ html, text }) {
-      this.edit({
-        table: this.$parent.table,
-        id: this.$parent.id,
-        column: this.column,
-        value: this.html ? html : text
-      })
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+      }
+
+      this.timeout = setTimeout(() => {
+        this.edit({
+          table: this.$parent.table,
+          id: this.$parent.id,
+          column: this.column,
+          value: this.html ? html : text
+        })
+      }, 1000)
     }
   }
 }
