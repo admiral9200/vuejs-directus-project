@@ -1,7 +1,7 @@
 <template>
   <div class="vue-directus-text">
     <div class="vue-directus-text__slot">
-      <quill-editor :content="text" :options="options" @change="change($event)" />
+      <quill-editor :content="text" :options="options" @change="change" />
     </div>
   </div>
 </template>
