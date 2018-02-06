@@ -1,3 +1,7 @@
+import VueDragula from 'vue-dragula'
+import VueQuillEditor, { Quill } from 'vue-quill-editor'
+import ImageResize from 'quill-image-resize-module'
+import { ImageDrop } from 'quill-image-drop-module'
 import VueDirectusApi from './api'
 import * as VueDirectusStore from './store'
 import * as VueDirectusComponents from './components'
@@ -11,6 +15,20 @@ const VueDirectus = {
     if (!VueDirectusApi) {
       throw Error(`VueDirectus requires the directus-sdk client.`)
     }
+
+    // Enable drag and drop handler
+    Vue.use(VueDragula)
+
+    // Enable editor
+    Vue.use(VueQuillEditor)
+
+    // Register editor stleys
+    require('./assets/css/lib/quill.core.css')
+    require('./assets/css/lib/quill.theme.css')
+
+    // Register editor modules
+    Quill.register('modules/imageResize', ImageResize)
+    Quill.register('modules/imageDrop', ImageDrop)
 
     // Empty array for all store mutations
     const done = []
