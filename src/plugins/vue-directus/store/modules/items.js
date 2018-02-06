@@ -92,7 +92,7 @@ const actions = {
     commit('BUSY', true)
 
     // Get the item´s array index
-    const index = parseInt(_.findKey(state.local[table].data, obj => obj._id === id))
+    const index = _.findIndex(state.local[table].data, obj => obj._id === id)
 
     // Remove item from local branch & resort table
     commit('REMOVE', { table, index })
