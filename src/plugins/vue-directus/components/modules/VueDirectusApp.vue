@@ -4,7 +4,7 @@
       <slot />
     </div>
     <div class="vue-directus-app__controls">
-      <button @click="save" :disabled="busy" v-if="diff.length > 0">SAVE</button>
+      <button @click="save" :disabled="busy" v-if="modified">SAVE</button>
     </div>
   </div>
 </template>
@@ -18,7 +18,8 @@ export default {
   computed: {
     ...mapGetters({
       busy: 'VueDirectus/items/busy',
-      diff: 'VueDirectus/items/diff'
+      diff: 'VueDirectus/items/diff',
+      modified: 'VueDirectus/items/modified'
     })
   },
 

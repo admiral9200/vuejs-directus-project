@@ -1,14 +1,9 @@
 /* eslint-disable padding-line-between-statements */
 import _ from 'lodash'
-import * as DeepDiff from 'deep-object-diff'
+import shortid from 'shortid'
 import VueDirectusApi from '../../api'
 
 const namespaced = true
-
-const setInternalId = () =>
-  Math.random()
-    .toString(36)
-    .substr(2, 9)
 
 const state = {
   busy: false,
@@ -22,19 +17,19 @@ const mutations = {
   },
 
   SAVE: (state, { table, resp }) => {
-    state.remote = { ...state.remote, [table]: resp }
-    _.each(state.remote[table].data, (obj, index) => {
+    _.each(resp.data, (obj, index) => {
       obj.sort = index
-      obj._id = setInternalId()
+      obj._id = shortid()
     })
-  },
-
-  SORT: (state, table) => {
-    _.each(state.local[table].data, (obj, index) => (obj.sort = index))
+    state.remote = { ...state.remote, [table]: resp }
   },
 
   SYNC: state => {
     state.local = _.cloneDeep(state.remote)
+  },
+
+  SORT: (state, table) => {
+    _.each(state.local[table].data, (obj, index) => (obj.sort = index))
   },
 
   ADD: (state, { table, item }) => {
@@ -47,89 +42,157 @@ const mutations = {
 }
 
 const actions = {
-  // Fetch items from backend
+  // Connect to backend and save results in local branch
+  // and apply sorting and internal _ID to all items
   async fetch({ commit }, table) {
     commit('BUSY', true)
-
-    // Await repsonse from server
-    await VueDirectusApi.getItems(table)
+    return VueDirectusApi.getItems(table)
       .then(resp => {
-        // Save items in remote branch, create a new internal _id and
-        // map array index to obj.sort value
         commit('SAVE', { table, resp })
-
-        // Sync remote branch to local branch
         commit('SYNC')
-
-        return commit('BUSY', false)
+        commit('BUSY', false)
+        return true
       })
       .catch(() => {
         throw Error(`Failed to fetch items from table '${table}'`)
       })
   },
 
-  // Apply sorting to all items
+  // Apply sorting by setting item.sort
+  // to its current array index
   sort({ commit }, table) {
     commit('BUSY', true)
     commit('SORT', table)
     commit('BUSY', false)
   },
 
-  // Add item to local branch
+  // Add item to local branch by cloning
+  // the most recent item from local branch
   add({ commit, getters }, table) {
     commit('BUSY', true)
 
     // Clone most recent item from the local branch
     const item = _.cloneDeep(_.last(getters.table(table)))
 
-    // Delete id, generate internal _id and increase sort index
-    delete item.id
-    item._id = setInternalId()
+    // Remove the cloned ID, increase sort value
+    // and generate new internal _ID
+    item.id = undefined
     item.sort += 1
+    item._id = shortid()
 
-    // Add new item to local branch & sort branch
+    // Push new item to local branch & resort table
     commit('ADD', { table, item })
     commit('SORT', table)
 
-    return commit('BUSY', false)
+    commit('BUSY', false)
   },
 
-  // Remove item from local branch
+  // Delete item from local branch
+  // by using its array index
   remove({ commit }, { table, id }) {
     commit('BUSY', true)
 
-    // Get the item´s index
+    // Get the item´s array index
     const index = parseInt(_.findKey(state.local[table].data, obj => obj._id === id))
 
-    // Remove item from local branch & sort branch
+    // Remove item from local branch & resort table
     commit('REMOVE', { table, index })
     commit('SORT', table)
 
-    return commit('BUSY', false)
+    commit('BUSY', false)
+  },
+
+  // Save all changes from local branch in server
+  // and sync with remote branch
+  save({ commit, getters, dispatch }) {
+    let promise = Promise.resolve()
+
+    Object.entries(getters.diff).forEach(([table, set]) => {
+      commit('BUSY', true)
+
+      if (set.toDelete.length > 0) {
+        promise = VueDirectusApi.deleteBulk(table, set.toDelete).catch(() => {
+          throw Error(`Failed to delete item(s) in table '${table}'`)
+        })
+      }
+      if (set.toCreate.length > 0) {
+        promise = VueDirectusApi.createBulk(table, set.toCreate).catch(() => {
+          throw Error(`Failed to create item(s) in table '${table}'`)
+        })
+      }
+      if (set.toUpdate.length > 0) {
+        promise = VueDirectusApi.updateBulk(table, set.toUpdate).catch(() => {
+          throw Error(`Failed to update item(s) in table '${table}'`)
+        })
+      }
+
+      // Fetch items to sync remote and local state
+      // this also resets `busy` state
+      promise.then(() => {
+        dispatch('fetch', table)
+        return true
+      })
+    })
   }
 }
 
 const getters = {
-  // Get current status
+  // Get busy status
   busy: state => state.busy,
 
-  // Get items for given table
+  // Get all items in table
   table(state) {
     return table => (state.local[table] ? state.local[table].data : [])
   },
 
-  // Get difference between local and remote branch
-  diff() {
-    const changed = []
-    _.each(state.remote, obj => {
-      const table = obj.meta.table
-      const diff = DeepDiff.diff(state.remote[table], state.local[table])
-      // Push modified objects
-      if (!_.isEmpty(diff)) {
-        changed.push(diff)
-      }
+  // Return wheter the local state contains uncommited diffs
+  modified(state, getters) {
+    return _.find(getters.diff, (set, table) => {
+      return !_.isEmpty(set.toDelete) || !_.isEmpty(set.toCreate) || !_.isEmpty(set.toUpdate)
     })
-    return changed
+  },
+
+  // Gett diff between local and remote branch
+  diff(state) {
+    let diff = {}
+
+    // Loop over all data sets in local branch
+    _.forOwn(state.local, (set, table) => {
+      const local = set.data
+      const remote = state.remote[table].data
+      const toDelete = []
+      const toCreate = []
+      const toUpdate = []
+
+      // Find missing items
+      _.forOwn(remote, el => {
+        if (!_.find(local, el)) {
+          toDelete.push(el)
+        }
+      })
+
+      // Find new items
+      _.forOwn(local, el => {
+        if (!_.find(remote, el)) {
+          toCreate.push(el)
+        }
+      })
+
+      // Find changed items
+      _.forOwn(local, el => {
+        let copy = _.find(remote, el)
+        if (!_.isEqual(copy, el) && !_.includes(toCreate, el) && !_.includes(toDelete, el)) {
+          toUpdate.push(el)
+        }
+      })
+
+      // Merge all arrays
+      diff = _.set(diff, `${table}.toDelete`, toDelete)
+      diff = _.set(diff, `${table}.toCreate`, toCreate)
+      diff = _.set(diff, `${table}.toUpdate`, toUpdate)
+    })
+
+    return diff
   }
 }
 
