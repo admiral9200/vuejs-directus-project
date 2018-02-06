@@ -46,8 +46,13 @@ export default {
 }
 
 .vue-directus-item__controls {
+  display: none;
   position: absolute;
   right: 0;
   top: 0;
+}
+
+.vue-directus-item:hover .vue-directus-item__controls {
+  display: block;
 }
 </style>
