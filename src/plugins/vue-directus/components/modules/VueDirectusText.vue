@@ -7,10 +7,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'VueDirectusText',
 
   props: {
+    column: {
+      type: String,
+      default: ''
+    },
     text: {
       type: String,
       default: ''
@@ -56,15 +62,19 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      edit: 'VueDirectus/items/edit'
+    }),
     ready(quill) {
       this.rawText = quill.container.firstChild.innerHTML
     },
     change({ html, text }) {
-      if (html !== this.rawText) {
-        console.log('changed')
-      } else {
-        console.log('unchanged')
-      }
+      this.edit({
+        table: this.$parent.table,
+        id: this.$parent.id,
+        column: this.column,
+        value: this.html ? html : text
+      })
     }
   }
 }

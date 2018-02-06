@@ -44,6 +44,13 @@ const mutations = {
 
   REMOVE: (state, { table, index }) => {
     state.local[table].data.splice(index, 1)
+  },
+
+  EDIT: (state, { table, id, column, value }) => {
+    const item = _.find(state.local[table].data, obj => obj._id === id)
+    if (item) {
+      item[column] = value
+    }
   }
 }
 
@@ -53,6 +60,13 @@ const actions = {
   sort({ commit }, table) {
     commit('BUSY', true)
     commit('SORT', table)
+    commit('BUSY', false)
+  },
+
+  // Edit item content
+  edit({ commit }, { table, id, column, value }) {
+    commit('BUSY', true)
+    commit('EDIT', { table, id, column, value })
     commit('BUSY', false)
   },
 
@@ -153,6 +167,14 @@ const getters = {
   // Get all items in table
   table(state) {
     return table => (state.local[table] ? state.local[table].data : [])
+  },
+
+  // Get an items content by column
+  content(state) {
+    return ({ table, id, column }) => {
+      const item = _.find(state.local[table].data, obj => obj._id === id)
+      return item ? item[column] : ''
+    }
   },
 
   // Return wheter the local state contains uncommited diffs
