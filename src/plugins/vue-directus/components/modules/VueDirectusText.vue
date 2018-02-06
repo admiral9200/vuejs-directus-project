@@ -7,7 +7,16 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapActions } from 'vuex'
+import VueQuillEditor, { Quill } from 'vue-quill-editor'
+import ImageResize from 'quill-image-resize-module'
+import { ImageDrop } from 'quill-image-drop-module'
+
+Vue.use(VueQuillEditor)
+
+Quill.register('modules/imageResize', ImageResize)
+Quill.register('modules/imageDrop', ImageDrop)
 
 export default {
   name: 'VueDirectusText',
@@ -81,3 +90,8 @@ export default {
   }
 }
 </script>
+
+<style>
+@import '../../assets/css/lib/quill.core.css';
+@import '../../assets/css/lib/quill.theme.css';
+</style>

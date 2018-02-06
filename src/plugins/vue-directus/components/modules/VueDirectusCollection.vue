@@ -11,7 +11,10 @@
 
 <script>
 import Vue from 'vue'
+import VueDragula from 'vue-dragula'
 import { mapGetters, mapActions } from 'vuex'
+
+Vue.use(VueDragula)
 
 export default {
   name: 'VueDirectusCollection',
