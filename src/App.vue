@@ -41,4 +41,8 @@ export default {
 
 <style>
 @import 'reset-css/reset.css';
+
+#app {
+  height: 100vh;
+}
 </style>

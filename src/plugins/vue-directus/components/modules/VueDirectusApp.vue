@@ -35,6 +35,7 @@ export default {
 
 <style>
 .vue-directus-app {
+  height: 100%;
   position: relative;
 }
 
