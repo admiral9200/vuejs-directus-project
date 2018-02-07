@@ -6,7 +6,7 @@
         <vue-directus-item v-for="project in items('projects')" table="projects" :id="project._id" :key="project._id">
           <vue-directus-text :column="'name'" :placeholder="'Placeholder test...'" :text="project.name" />
           <vue-directus-text :html="true" :column="'description'" :text="project.description" />
-          <vue-directus-image :name="project.image.data.name" :height="project.image.data.height" :width="project.image.data.width" />
+          <vue-directus-image :src="`http://192.168.33.6/storage/uploads/${project.image.data.name}`" />
         </vue-directus-item>
       </vue-directus-collection>
     </vue-directus-app>
@@ -45,5 +45,7 @@ export default {
 
 #app {
   height: 100vh;
+  margin: auto;
+  width: 80vh;
 }
 </style>

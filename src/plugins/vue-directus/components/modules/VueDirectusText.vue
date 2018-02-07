@@ -73,6 +73,7 @@ export default {
     ...mapActions({
       edit: 'VueDirectus/items/edit'
     }),
+
     change({ html, text }) {
       if (this.timeout) {
         clearTimeout(this.timeout)
