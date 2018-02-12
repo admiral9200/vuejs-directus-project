@@ -5,7 +5,7 @@
       <vue-croppie ref="croppie" :boundary="dimensions" :viewport="{ width: '100%', height: '100%' }" :enable-resize="false" :mouse-wheel-zoom="false" />
     </div>
     <div class="vue-directus-image__controls">
-      <button @click="saveCrop">CROP</button>
+      <button @click="save">CROP</button>
     </div>
   </div>
 </template>
@@ -68,19 +68,22 @@ export default {
       this.hasLoaded = true
     },
 
-    saveCrop() {
-      this.$refs.croppie.result({ type: 'base64' }).then(output => {
-        this.edit({
-          table: this.$parent.table,
-          id: this.$parent.id,
-          column: 'image',
-          value: {
-            name: 'image.png',
-            type: 'image/png',
-            data: output
-          }
-        })
-        return true
+    async crop() {
+      return this.$refs.croppie.result({ type: 'base64' })
+    },
+
+    async save() {
+      const output = await this.crop()
+
+      this.edit({
+        table: this.$parent.table,
+        id: this.$parent.id,
+        column: 'image',
+        value: {
+          name: 'image.png',
+          type: 'image/png',
+          data: output
+        }
       })
     }
   }
@@ -117,6 +120,7 @@ export default {
 .croppie-container .cr-viewport,
 .croppie-container .cr-resizer {
   border: 0;
+  box-shadow: none;
 }
 
 .croppie-container .cr-slider-wrap {
