@@ -1,13 +1,21 @@
 <template>
   <div class="vue-directus-image">
-    vue-directus-image
+    <div class="vue-directus-image__image" v-images-loaded="imageLoaded">
+      <img :src="src" ref="img">
+      <vue-croppie ref="croppie" :boundary="dimensions" :viewport="{ width: '100%', height: '100%' }" :enable-resize="false" :mouse-wheel-zoom="false" />
+    </div>
+    <div class="vue-directus-image__controls">
+      <button @click="saveCrop">CROP</button>
+    </div>
   </div>
 </template>
 
 <script>
+// FIXME: when clonging an item we must base64 the cloned img first
 import Vue from 'vue'
 import VueCroppie from 'vue-croppie'
 import imagesLoaded from 'vue-images-loaded'
+import { mapGetters, mapActions } from 'vuex'
 
 Vue.use(VueCroppie)
 
@@ -16,6 +24,65 @@ export default {
 
   directives: {
     imagesLoaded
+  },
+
+  props: {
+    name: {
+      type: String,
+      default: ''
+    }
+  },
+
+  data() {
+    return {
+      hasLoaded: false,
+      dimensions: {}
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      image: 'VueDirectus/items/image'
+    }),
+    src() {
+      return this.image(this.$parent.table, this.$parent.id, this.name)
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      edit: 'VueDirectus/items/edit'
+    }),
+
+    imageLoaded() {
+      // Dimension are set on first load only
+      if (!this.hasLoaded) {
+        this.dimensions = {
+          height: this.$refs.img.clientHeight,
+          width: '100%'
+        }
+      }
+
+      this.$refs.croppie.bind({ url: this.src })
+
+      this.hasLoaded = true
+    },
+
+    saveCrop() {
+      this.$refs.croppie.result({ type: 'base64' }).then(output => {
+        this.edit({
+          table: this.$parent.table,
+          id: this.$parent.id,
+          column: 'image',
+          value: {
+            name: 'image.png',
+            type: 'image/png',
+            data: output
+          }
+        })
+        return true
+      })
+    }
   }
 }
 </script>
@@ -26,21 +93,18 @@ export default {
   position: relative;
 }
 
+.vue-directus-image__image {
+  position: relative;
+}
+
 .vue-directus-image__image img {
   display: block;
-  max-width: 100%;
+  width: 100%;
 }
 
-.vue-directus-image.is-cropping .vue-directus-image__image {
-  display: none;
-}
-
-.vue-directus-image .vue-directus-image__cropping {
-  display: none;
-}
-
-.vue-directus-image.is-cropping .vue-directus-image__cropping {
-  display: block;
+.vue-directus-image__image .croppie-container {
+  position: absolute;
+  top: 0;
 }
 
 .vue-directus-image__controls {

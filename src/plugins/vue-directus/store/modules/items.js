@@ -60,8 +60,9 @@ const actions = {
     commit('EDIT', { table, index, column, value })
   },
 
-  // Connect to backend and save results in local branch
-  // and apply sorting and internal _ID to all items
+  // Connect to backend and save results in local branch,
+  // apply sorting and internal _ID to all items and
+  // modify image data if neccessary
   async fetch({ commit }, table) {
     commit('BUSY', true)
     return VueDirectusApi.getItems(table)
@@ -69,6 +70,18 @@ const actions = {
         _.each(resp.data, (obj, index) => {
           obj.sort = index
           obj._id = shortid()
+
+          // Search for images and modify them. This creates
+          // a valid file object for later editing
+          _.each(obj, function(value, key) {
+            if (_.isObject(value) && value.data.type.includes('image')) {
+              obj[key] = {
+                data: `${VueDirectusApi.url.split('/api')[0]}/storage/uploads/${value.data.name}`,
+                type: value.data.type,
+                name: value.data.name
+              }
+            }
+          })
         })
         commit('FETCH', { table, resp })
         commit('SYNC')
@@ -161,6 +174,17 @@ const getters = {
   // Get all items in table
   table(state) {
     return table => (state.local[table] ? state.local[table].data : [])
+  },
+
+  // Get single item in table
+  row(state) {
+    return (table, id) =>
+      state.local[table] ? _.filter(state.local[table].data, obj => obj._id === id)[0] : undefined
+  },
+
+  // Get image from item in table
+  image(state, getters) {
+    return (table, id, name) => getters.row(table, id)[name].data
   },
 
   // Return wheter the local state contains uncommited diffs

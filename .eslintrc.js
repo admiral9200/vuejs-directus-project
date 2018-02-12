@@ -43,6 +43,7 @@ module.exports = {
     'no-new-wrappers': 2,
     'no-unused-vars': [2, { vars: 'all', args: 'none' }],
     'vue/max-attributes-per-line': 0,
+    'no-unused-vars': process.env.NODE_ENV === 'production' ? 2 : 1,
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 1,
     'padding-line-between-statements': [
       2,
