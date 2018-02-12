@@ -17,10 +17,6 @@ const mutations = {
   },
 
   FETCH: (state, { table, resp }) => {
-    _.each(resp.data, (obj, index) => {
-      obj.sort = index
-      obj._id = shortid()
-    })
     state.remote = { ...state.remote, [table]: resp }
   },
 
@@ -70,6 +66,10 @@ const actions = {
     commit('BUSY', true)
     return VueDirectusApi.getItems(table)
       .then(resp => {
+        _.each(resp.data, (obj, index) => {
+          obj.sort = index
+          obj._id = shortid()
+        })
         commit('FETCH', { table, resp })
         commit('SYNC')
         commit('BUSY', false)
