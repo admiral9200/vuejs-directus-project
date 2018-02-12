@@ -64,7 +64,6 @@ export default {
       }
 
       this.$refs.croppie.bind({ url: this.src })
-
       this.hasLoaded = true
     },
 
