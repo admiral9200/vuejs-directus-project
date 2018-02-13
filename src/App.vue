@@ -3,8 +3,8 @@
     <vue-directus-app>
       <vue-directus-collection table="projects" :items="itemsByTable('projects')">
         <vue-directus-item v-for="item in itemsByTable('projects')" table="projects" :id="item._id" :key="item._id">
-          <h2 v-html="item.name" />
-          <p v-html="item.description" />
+          <vue-directus-text column="name" placeholder="Enter a name..." :text="item.name" />
+          <vue-directus-text column="description" :rich="true" placeholder="Enter a description..." :text="item.description" />
           <!-- <img :src="`http://192.168.33.6/storage/uploads/${item.image.data.name}`"> -->
         </vue-directus-item>
       </vue-directus-collection>
