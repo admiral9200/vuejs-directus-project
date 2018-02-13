@@ -22,6 +22,9 @@ const mutations = {
   },
   REMOVE: (state, { table, index }) => {
     state.local[table].data.splice(index, 1)
+  },
+  EDIT: (state, { table, index, column, value }) => {
+    state.local[table].data[index][column] = value
   }
 }
 
@@ -65,6 +68,11 @@ const actions = {
 
     // Remove item from local branch
     commit('REMOVE', { table, index })
+  },
+
+  edit({ commit }, { table, id, column, value }) {
+    const index = _.findIndex(state.local[table].data, set => set._id === id)
+    commit('EDIT', { table, index, column, value })
   },
 
   save({ commit, getters }) {

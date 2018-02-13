@@ -6,6 +6,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapActions } from 'vuex'
 import VueQuillEditor, { Quill } from 'vue-quill-editor'
 import ImageResize from 'quill-image-resize-module'
 import { ImageDrop } from 'quill-image-drop-module'
@@ -86,14 +87,27 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      edit: 'VueDirectus/items/edit'
+    }),
+
     change({ html, text }) {
+      if (this.text === text || this.text === html) {
+        return true
+      }
+
       if (this.timeout) {
         clearTimeout(this.timeout)
       }
 
       this.timeout = setTimeout(() => {
-        console.log(html, text)
-      }, 500)
+        this.edit({
+          table: this.table,
+          id: this.id,
+          column: this.column,
+          value: this.rich ? html : text
+        })
+      }, 250)
     }
   }
 }
