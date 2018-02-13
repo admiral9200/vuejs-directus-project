@@ -1,52 +1,31 @@
 <template>
-  <div class="vue-directus-app" :data-busy="busy">
-    <div class="vue-directus-app__slot">
-      <slot />
-    </div>
-    <div class="vue-directus-app__controls">
-      <button @click="save" :disabled="busy" v-if="modified">SAVE</button>
-      <button @click="undo" :disabled="busy" v-if="modified">UNDO</button>
-    </div>
+  <div class="vue-directus-app" :data-is-busy="isBusy">
+    <slot />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'VueDirectusApp',
 
   computed: {
     ...mapGetters({
-      busy: 'VueDirectus/items/busy',
-      diff: 'VueDirectus/items/diff',
-      modified: 'VueDirectus/items/modified'
-    })
-  },
-
-  methods: {
-    ...mapActions({
-      undo: 'VueDirectus/undo',
-      save: 'VueDirectus/items/save'
+      isBusy: 'VueDirectus/isBusy'
     })
   }
 }
 </script>
 
-<style>
+<style lang="postcss">
 .vue-directus-app {
   height: 100%;
   position: relative;
-}
 
-.vue-directus-app[data-busy='true'] {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.vue-directus-app__controls {
-  bottom: 20px;
-  position: fixed;
-  right: 20px;
+  &[data-is-busy] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 </style>

@@ -18,19 +18,39 @@ const VueDirectus = {
     // Register new store module
     store.registerModule('VueDirectus', {
       namespaced: true,
-      modules: { ...VueDirectusStore },
+      state: {
+        busy: false
+      },
+      // Include all external modules
+      modules: {
+        ...VueDirectusStore
+      },
+      getters: {
+        isBusy: state => state.busy
+      },
       mutations: {
-        EMPTY_ITEMS(state) {
+        RESET_ITEMS(state) {
           state.items.remote = {}
           state.items.local = {}
+        },
+        SET_STATUS(state, payload) {
+          state.busy = payload
         }
       },
       actions: {
+        busy({ commit }, payload) {
+          commit('SET_STATUS', payload)
+        },
         undo({ commit }) {
+          // Remove latest commit
           done.pop()
-          commit('EMPTY_ITEMS')
+          // Undo all previous commits
+          commit('RESET_ITEMS')
+          // Recommit all previous commits except the last one
+          // which we have just removed
           done.forEach(({ type, payload }) => {
             commit(type, payload, { root: true })
+            // Remove commit from history
             done.pop()
           })
         }
@@ -42,14 +62,14 @@ const VueDirectus = {
     store.subscribe(mutation => {
       if (
         mutation.type.includes('items/') &&
-        !mutation.type.includes('items/BUSY') &&
-        !mutation.type.includes('items/RESORT')
+        !mutation.type.includes('BUSY') &&
+        !mutation.type.includes('RESORT')
       ) {
         done.push(mutation)
       }
     })
 
-    // Register components
+    // Register plugin components
     Object.entries(VueDirectusComponents).forEach(([name, component]) =>
       Vue.component(name, component)
     )
