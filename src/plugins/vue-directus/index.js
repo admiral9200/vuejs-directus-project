@@ -12,13 +12,12 @@ const VueDirectus = {
       throw Error(`VueDirectus requires the directus-sdk client.`)
     }
 
-    // Empty array for all store mutations
-    const done = []
-
     // Register new store module
     store.registerModule('VueDirectus', {
       namespaced: true,
       state: {
+        // This holds all commited mutations
+        commited: [],
         busy: false
       },
       // Include all external modules
@@ -26,12 +25,13 @@ const VueDirectus = {
         ...VueDirectusStore
       },
       getters: {
-        isBusy: state => state.busy
+        isBusy: state => state.busy,
+        // Ignore the first two `FETCH & SYNC` mutations
+        hasCommits: state => state.commited.length > 2
       },
       mutations: {
         RESET_ITEMS(state) {
-          state.items.remote = {}
-          state.items.local = {}
+          state.items.fetched = []
         },
         SET_STATUS(state, payload) {
           state.busy = payload
@@ -41,31 +41,30 @@ const VueDirectus = {
         busy({ commit }, payload) {
           commit('SET_STATUS', payload)
         },
-        undo({ commit }) {
+        undo({ state, commit }) {
           // Remove latest commit
-          done.pop()
+          state.commited.pop()
           // Undo all previous commits
           commit('RESET_ITEMS')
           // Recommit all previous commits except the last one
           // which we have just removed
-          done.forEach(({ type, payload }) => {
+          state.commited.forEach(({ type, payload }) => {
             commit(type, payload, { root: true })
             // Remove commit from history
-            done.pop()
+            state.commited.pop()
           })
         }
       }
     })
 
-    // Subscribe to item mutations but
-    // skip sorting and busy mutations
-    store.subscribe(mutation => {
-      if (
-        mutation.type.includes('items/') &&
-        !mutation.type.includes('BUSY') &&
-        !mutation.type.includes('RESORT')
-      ) {
-        done.push(mutation)
+    // Subscribe to item mutations
+    store.subscribe((mutation, state) => {
+      // Skip mutations that contain the following
+      const blacklist = ['SET_STATUS', 'RESET_ITEMS']
+      const exclude = blacklist.some(el => mutation.type.includes(el))
+
+      if (!exclude) {
+        state.VueDirectus.commited.push(mutation)
       }
     })
 

@@ -1,3 +1,5 @@
 import VueDirectusApp from './modules/VueDirectusApp'
+import VueDirectusCollection from './modules/VueDirectusCollection'
+import VueDirectusItem from './modules/VueDirectusItem'
 
-export { VueDirectusApp }
+export { VueDirectusApp, VueDirectusCollection, VueDirectusItem }

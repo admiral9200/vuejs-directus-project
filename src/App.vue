@@ -1,19 +1,43 @@
 <template>
   <div id="app">
     <vue-directus-app>
-      vue-directus-app
+      <vue-directus-collection table="projects" :items="itemsByTable('projects')">
+        <vue-directus-item v-for="item in itemsByTable('projects')" table="projects" :id="item._id" :key="item._id">
+          <h2 v-html="item.name" />
+          <p v-html="item.description" />
+          <!-- <img :src="`http://192.168.33.6/storage/uploads/${item.image.data.name}`"> -->
+        </vue-directus-item>
+      </vue-directus-collection>
     </vue-directus-app>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'App'
+  name: 'App',
+
+  computed: {
+    ...mapGetters({
+      itemsByTable: 'VueDirectus/items/byTable'
+    })
+  },
+
+  created() {
+    this.fetch('projects')
+  },
+
+  methods: {
+    ...mapActions({
+      fetch: 'VueDirectus/items/fetch'
+    })
+  }
 }
 </script>
 
 <style>
-@import 'reset-css/reset.css';
+@import 'normalize.css';
 
 * {
   box-sizing: border-box;
