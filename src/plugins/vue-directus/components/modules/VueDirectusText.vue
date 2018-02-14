@@ -128,8 +128,4 @@ export default {
 
 <style lang="postcss">
 @import '../../assets/css/lib/quill.theme.css';
-
-.vue-directus-text {
-  position: relative;
-}
 </style>

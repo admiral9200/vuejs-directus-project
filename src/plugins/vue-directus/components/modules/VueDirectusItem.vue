@@ -55,6 +55,12 @@ export default {
 </script>
 
 <style lang="postcss">
+:root {
+  --item-hover-background: rgb(238, 248, 253);
+  --item-hover-border-width: 1px;
+  --item-hover-border-color: rgb(205, 238, 255);
+}
+
 .vue-directus-item {
   position: relative;
 
@@ -69,8 +75,8 @@ export default {
   }
 
   &:hover {
-    background-color: rgb(238, 248, 253);
-    box-shadow: inset 0 0 0 1px rgb(205, 238, 255);
+    background-color: var(--item-hover-background);
+    box-shadow: inset 0 0 0 var(--item-hover-border-width) var(--item-hover-border-color);
   }
 }
 </style>

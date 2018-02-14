@@ -160,6 +160,11 @@ export default {
 </script>
 
 <style lang="postcss">
+:root {
+  --range-background: rgba(255, 255, 255, 0.5);
+  --range-padding: 10px;
+}
+
 .vue-directus-image {
   position: relative;
 
@@ -195,10 +200,10 @@ export default {
     }
 
     .cr-slider-wrap {
-      background: rgba(255, 255, 255, 0.5);
+      background: var(--range-background);
       bottom: 0;
       margin: 0;
-      padding: 10px 0;
+      padding: var(--range-padding) 0;
       position: absolute;
       width: 100%;
       z-index: 9;

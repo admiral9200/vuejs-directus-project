@@ -53,11 +53,13 @@ export default {
 
 <style lang="postcss">
 :root {
+  --height: 100%;
   --offset: 20px;
+  --busy-opacity: 0.3;
 }
 
 .vue-directus-app {
-  height: 100%;
+  height: var(--height);
   position: relative;
 
   & button {
@@ -77,7 +79,7 @@ export default {
   }
 
   &[data-is-busy] &__slot {
-    opacity: 0.3;
+    opacity: var(--busy-opacity);
     pointer-events: none;
   }
 
