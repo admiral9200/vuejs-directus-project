@@ -182,7 +182,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 99;
+    z-index: 9;
 
     input[type='file'] {
       display: none;
