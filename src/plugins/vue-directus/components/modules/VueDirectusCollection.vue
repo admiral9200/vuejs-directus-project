@@ -37,7 +37,7 @@ export default {
 
 <style lang="postcss">
 :root {
-  --offset: -20px;
+  --controls-position: -20px;
 }
 
 .vue-directus-collection {
@@ -48,7 +48,7 @@ export default {
   }
 
   &__controls {
-    bottom: var(--offset);
+    bottom: var(--controls-position);
     text-align: center;
     position: absolute;
     width: 100%;

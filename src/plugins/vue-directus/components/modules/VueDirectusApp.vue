@@ -53,13 +53,14 @@ export default {
 
 <style lang="postcss">
 :root {
-  --height: 100%;
-  --offset: 20px;
+  --app-height: 100%;
+  --controls-position: 20px;
+  --status-position: 20px;
   --busy-opacity: 0.3;
 }
 
 .vue-directus-app {
-  height: var(--height);
+  height: var(--app-height);
   position: relative;
 
   & button {
@@ -69,8 +70,8 @@ export default {
 
   &__status {
     position: fixed;
-    right: var(--offset);
-    top: var(--offset);
+    right: var(--status-position);
+    top: var(--status-position);
   }
 
   &__slot {
@@ -84,9 +85,9 @@ export default {
   }
 
   &__controls {
-    bottom: var(--offset);
+    bottom: var(--controls-position);
     position: fixed;
-    right: var(--offset);
+    right: var(--controls-position);
   }
 }
 </style>
