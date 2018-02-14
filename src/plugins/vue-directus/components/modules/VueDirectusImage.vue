@@ -53,10 +53,10 @@ export default {
 
   data() {
     return {
-      table: this.$parent.table,
-      id: this.$parent.id,
       loaded: false,
       cropping: false,
+      table: this.$parent.table,
+      id: this.$parent.id,
       rendered: this.src(this.img),
       dimensions: {
         height: 'auto',
