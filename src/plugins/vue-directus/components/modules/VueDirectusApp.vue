@@ -74,11 +74,11 @@ export default {
   &__slot {
     height: 100%;
     position: relative;
+  }
 
-    [data-is-busy] & {
-      opacity: 0.3;
-      pointer-events: none;
-    }
+  &[data-is-busy] &__slot {
+    opacity: 0.3;
+    pointer-events: none;
   }
 
   &__controls {
