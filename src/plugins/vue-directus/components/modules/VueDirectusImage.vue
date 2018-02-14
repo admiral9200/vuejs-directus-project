@@ -1,7 +1,7 @@
 <template>
-  <div class="vue-directus-image" v-if="img" :class="{ 'is-cropping': isCropping }">
+  <div class="vue-directus-image" :class="{ 'is-cropping': cropping }">
     <div class="vue-directus-image__img" @click="init">
-      <img ref="img" :src="src">
+      <img ref="img" :src="rendered">
     </div>
     <div class="vue-directus-image__croppie">
       <vue-croppie ref="croppie" :boundary="dimensions" :viewport="dimensions" :enable-resize="false" :mouse-wheel-zoom="false" />
@@ -27,6 +27,7 @@
 <script>
 import Vue from 'vue'
 import VueCroppie from 'vue-croppie'
+import { mapActions } from 'vuex'
 
 Vue.use(VueCroppie)
 
@@ -37,13 +38,19 @@ export default {
     img: {
       type: Object,
       default: () => {}
+    },
+    column: {
+      type: String,
+      default: undefined
     }
   },
 
   data() {
     return {
-      isCropping: false,
-      src: this.img ? `http://192.168.33.6/storage/uploads/${this.img.data.name}` : undefined,
+      table: this.$parent.table,
+      id: this.$parent.id,
+      cropping: false,
+      rendered: this.src(this.img),
       dimensions: {
         height: 'auto',
         width: '100%'
@@ -51,35 +58,59 @@ export default {
     }
   },
 
+  watch: {
+    img(payload) {
+      this.rendered = this.src(payload)
+    }
+  },
+
   mounted() {
-    if (this.img) {
-      this.$refs.img.onload = () => {
-        this.dimensions = {
-          height: this.$refs.img.clientHeight,
-          width: this.$refs.img.clientWidth
-        }
+    this.$refs.img.onload = () => {
+      this.dimensions = {
+        height: this.$refs.img.clientHeight,
+        width: this.$refs.img.clientWidth
       }
     }
   },
 
   methods: {
-    init() {
-      this.update()
-      this.isCropping = true
-    },
+    ...mapActions({
+      edit: 'VueDirectus/items/edit'
+    }),
 
-    update() {
-      this.$refs.croppie.refresh()
-      this.$refs.croppie.bind({ url: this.src })
-    },
-
-    async save() {
-      this.src = await this.$refs.croppie.result({ type: 'base64' })
-      this.isCropping = false
+    src(img) {
+      return img.name ? img.data : `http://192.168.33.6/storage/uploads/${img.data.name}`
     },
 
     upload() {
       this.$refs.file.click()
+    },
+
+    init() {
+      this.update()
+      this.cropping = true
+    },
+
+    update() {
+      this.$refs.croppie.refresh()
+      this.$refs.croppie.bind({ url: this.rendered })
+    },
+
+    async save() {
+      this.rendered = await this.$refs.croppie.result({ type: 'base64' })
+
+      this.edit({
+        table: this.table,
+        id: this.id,
+        column: this.column,
+        value: {
+          name: `${this.id}_${this.column}_base64.png`,
+          type: 'image/png',
+          data: this.rendered
+        }
+      })
+
+      this.cropping = false
     },
 
     uploaded($event) {
@@ -93,7 +124,7 @@ export default {
       reader.readAsDataURL(files[0])
 
       reader.onload = () => {
-        this.src = reader.result
+        this.rendered = reader.result
         this.update()
       }
     }
