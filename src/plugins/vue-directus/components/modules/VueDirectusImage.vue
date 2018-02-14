@@ -55,6 +55,7 @@ export default {
     return {
       table: this.$parent.table,
       id: this.$parent.id,
+      loaded: false,
       cropping: false,
       rendered: this.src(this.img),
       dimensions: {
@@ -73,16 +74,25 @@ export default {
 
   mounted() {
     this.$refs.img.onload = () => {
+      // Only run once on initial page load and
+      // ignore events when image was cropped
+      if (this.loaded) {
+        return
+      }
+
       this.dimensions = {
         height: this.$refs.img.clientHeight,
         width: this.$refs.img.clientWidth
       }
+
       // Set fixed dimesion on image in order to stop content
       // displacement when calculated height is off by 0.n pixels
       this.$refs.img.setAttribute(
         'style',
-        `height: ${this.$refs.img.clientHeight}px; width: ${this.$refs.img.clientWidth}px`
+        `height: ${this.dimensions.height}px; width: ${this.dimensions.width}px`
       )
+
+      this.loaded = true
     }
   },
 
