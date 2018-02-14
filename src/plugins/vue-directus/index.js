@@ -16,17 +16,16 @@ const VueDirectus = {
     store.registerModule('VueDirectus', {
       namespaced: true,
       state: {
-        // This holds all commited mutations
         commited: [],
         busy: false
       },
-      // Include all external modules
       modules: {
         ...VueDirectusStore
       },
       getters: {
         isBusy: state => state.busy,
-        hasCommits: state => state.commited.length > 0
+        // Return length of mutations ignoring all SYNC and FETCH mutations
+        hasCommits: state => state.commited.filter(m => !/SYNC|FETCH/.test(m.type)).length > 0
       },
       mutations: {
         RESET_ITEMS(state) {
@@ -41,15 +40,12 @@ const VueDirectus = {
           commit('SET_STATUS', payload)
         },
         undo({ state, commit }) {
-          // Remove latest commit
           state.commited.pop()
-          // Undo all previous commits
           commit('RESET_ITEMS')
-          // Recommit all previous commits except the last one
-          // which we have just removed
+          // Recommit all previous commits except the last one, which we
+          // have just removed. Than remove the restored commits from the history.
           state.commited.forEach(({ type, payload }) => {
             commit(type, payload, { root: true })
-            // Remove commit from history
             state.commited.pop()
           })
         }
@@ -57,12 +53,9 @@ const VueDirectus = {
     })
 
     // Subscribe to item mutations
+    // Ignore internal STATUS and RESET mutations
     store.subscribe((mutation, state) => {
-      // Skip mutations that contain the following
-      const blacklist = ['SET_STATUS', 'RESET_ITEMS']
-      const exclude = blacklist.some(el => mutation.type.includes(el))
-
-      if (!exclude) {
+      if (!/STATUS|RESET/.test(mutation.type)) {
         state.VueDirectus.commited.push(mutation)
       }
     })

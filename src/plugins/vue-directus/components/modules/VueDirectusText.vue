@@ -7,8 +7,8 @@
 <script>
 import { mapActions } from 'vuex'
 import { VueEditor } from 'vue2-editor'
-import ImageResize from 'quill-image-resize-module'
 import { ImageDrop } from 'quill-image-drop-module'
+import ImageResize from 'quill-image-resize-module'
 
 export default {
   name: 'VueDirectusText',
@@ -79,6 +79,9 @@ export default {
       set: function(payload) {
         const content = this.rich ? payload : payload.replace(/(<([^>]+)>)/gi, '')
 
+        // Ignore events where content didnt change
+        // This happens on page load when first setting the content
+        // and when changes are undone via the `undo` function
         if (content === this.text) {
           return
         }

@@ -33,57 +33,44 @@ const mutations = {
 }
 
 const actions = {
+  // Fetch items from API, add internal _id and
+  // apply sorting based on its current position
   async fetch({ commit, dispatch }, table) {
     dispatch('VueDirectus/busy', true, { root: true })
-
-    // Fetch items from API
     const items = await VueDirectusApi.getItems(table)
-    const payload = items.data
-
-    // Modify fetched items
-    _.each(payload, (set, index) => {
+    _.each(items.data, (set, index) => {
       set.sort = index
       set._id = shortid()
       set._hasImage = !!_.find(set, o => _.isObject(o) && _.get(o, 'data.type').includes('image'))
     })
-
-    // Save fetched items and sync with local branch
     commit('FETCH', { table, items })
     commit('SYNC')
-
     dispatch('VueDirectus/busy', false, { root: true })
   },
 
+  // Add item by cloning its latest sibling
   add({ commit }, table) {
-    // Clone previous sibling
     let item = _.clone(_.last(state.local[table].data))
-
-    // Change _id and increase sort
     item._id = shortid()
     item.sort += 1
-
-    // Add clone to local branch
     commit('ADD', { table, item })
   },
 
+  // Remove item based on its _id
   remove({ commit }, { table, id }) {
-    // Get index of item
     const index = _.findIndex(state.local[table].data, set => set._id === id)
-
     commit('REMOVE', { table, index })
   },
 
+  // Edit item based on its _id
   edit({ commit }, { table, id, column, value }) {
-    // Get index of item
     const index = _.findIndex(state.local[table].data, set => set._id === id)
-
     commit('EDIT', { table, index, column, value })
   },
 
+  // Save all changes
   save({ commit, getters }) {
-    // Get changed items
     const diff = getters.diff
-
     console.log(diff)
   }
 }
