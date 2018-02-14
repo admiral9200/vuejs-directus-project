@@ -77,10 +77,10 @@ const actions = {
 
 const getters = {
   // Return all items of a given table
-  itemsByTable: state => table => (state.local[table] ? state.local[table].data : []),
+  table: state => table => (state.local[table] ? state.local[table].data : []),
 
   // Return item count of a given table
-  countByTable: state => table => (state.local[table] ? state.local[table].meta.total : 0),
+  count: state => table => (state.local[table] ? state.local[table].meta.total : 0),
 
   // Return wheter the local state contains uncommited diffs
   // hasDiff: (state, getters) => {
