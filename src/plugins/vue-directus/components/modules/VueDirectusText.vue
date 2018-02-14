@@ -55,6 +55,20 @@ export default {
                 modules: ['Resize', 'Toolbar']
               }
             : false,
+          keyboard: {
+            // Disable TAB key
+            bindings: {
+              tab: {
+                key: 'tab',
+                handler: () => false
+              },
+              // Disable ENTER key if text mode
+              enter: {
+                key: 'enter',
+                handler: () => this.rich
+              }
+            }
+          },
           clipboard: {
             matchVisual: false
           },
