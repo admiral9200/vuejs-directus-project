@@ -80,15 +80,15 @@ const getters = {
   byTable: state => table => (state.local[table] ? state.local[table].data : []),
 
   // Return wheter the local state contains uncommited diffs
-  hasDiff: (state, getters) => {
-    return (
-      _.size(
-        _.find(getters.diff, (set, table) => {
-          return !_.isEmpty(set.toDelete) || !_.isEmpty(set.toCreate) || !_.isEmpty(set.toUpdate)
-        })
-      ) > 0
-    )
-  },
+  // hasDiff: (state, getters) => {
+  //   return (
+  //     _.size(
+  //       _.find(getters.diff, (set, table) => {
+  //         return !_.isEmpty(set.toDelete) || !_.isEmpty(set.toCreate) || !_.isEmpty(set.toUpdate)
+  //       })
+  //     ) > 0
+  //   )
+  // },
 
   // Get diff between local and remote state
   diff: state => {

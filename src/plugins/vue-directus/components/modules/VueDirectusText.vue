@@ -49,10 +49,12 @@ export default {
         theme: 'bubble',
         placeholder: this.placeholder || 'Enter some text...',
         modules: {
-          imageDrop: true,
-          imageResize: {
-            modules: ['Resize', 'DisplaySize', 'Toolbar']
-          },
+          imageDrop: this.rich,
+          imageResize: this.rich
+            ? {
+                modules: ['Resize', 'Toolbar']
+              }
+            : false,
           clipboard: {
             matchVisual: false
           },

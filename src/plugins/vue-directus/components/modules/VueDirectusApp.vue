@@ -65,11 +65,6 @@ export default {
     user-select: none;
   }
 
-  &[data-is-busy] {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
   &__status {
     position: fixed;
     right: var(--offset);
@@ -79,6 +74,11 @@ export default {
   &__slot {
     height: 100%;
     position: relative;
+
+    [data-is-busy] & {
+      opacity: 0.3;
+      pointer-events: none;
+    }
   }
 
   &__controls {

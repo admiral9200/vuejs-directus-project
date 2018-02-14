@@ -3,7 +3,7 @@ module.exports = {
   rules: {
     indentation: 2,
     'at-rule-no-unknown': [true, { ignoreAtRules: ['tailwind', 'apply'] }],
-    'selector-nested-pattern': '^&',
+    'selector-nested-pattern': '.',
     'no-missing-end-of-source-newline': true,
     'no-empty-source': true,
     'no-duplicate-selectors': true,
