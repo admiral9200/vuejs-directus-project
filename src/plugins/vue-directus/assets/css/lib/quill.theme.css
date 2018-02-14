@@ -5,6 +5,22 @@
  * Copyright (c) 2013, salesforce.com
  */
 
+.ql-editor {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  min-height: 100% !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  text-align: inherit !important;
+}
+
+.ql-container {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
 .ql-bubble.ql-toolbar:after,
 .ql-bubble .ql-toolbar:after {
   clear: both;

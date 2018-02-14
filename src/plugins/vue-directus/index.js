@@ -26,8 +26,7 @@ const VueDirectus = {
       },
       getters: {
         isBusy: state => state.busy,
-        // Ignore the first two `FETCH & SYNC` mutations
-        hasCommits: state => state.commited.length > 2
+        hasCommits: state => state.commited.length > 0
       },
       mutations: {
         RESET_ITEMS(state) {

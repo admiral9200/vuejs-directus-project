@@ -14,15 +14,19 @@ const mutations = {
   SYNC: state => {
     state.local = _.cloneDeep(state.remote)
   },
+
   FETCH: (state, { table, items }) => {
     state.remote = { ...state.remote, [table]: items }
   },
+
   ADD: (state, { table, item }) => {
     state.local[table].data.push(item)
   },
+
   REMOVE: (state, { table, index }) => {
     state.local[table].data.splice(index, 1)
   },
+
   EDIT: (state, { table, index, column, value }) => {
     state.local[table].data[index][column] = value
   }
@@ -66,17 +70,20 @@ const actions = {
     // Get index of item
     const index = _.findIndex(state.local[table].data, set => set._id === id)
 
-    // Remove item from local branch
     commit('REMOVE', { table, index })
   },
 
   edit({ commit }, { table, id, column, value }) {
+    // Get index of item
     const index = _.findIndex(state.local[table].data, set => set._id === id)
+
     commit('EDIT', { table, index, column, value })
   },
 
   save({ commit, getters }) {
+    // Get changed items
     const diff = getters.diff
+
     console.log(diff)
   }
 }
