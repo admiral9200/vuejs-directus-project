@@ -61,6 +61,7 @@ export default {
   watch: {
     img(payload) {
       this.rendered = this.src(payload)
+      this.update()
     }
   },
 
