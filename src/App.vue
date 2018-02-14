@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <vue-directus-app>
-      <vue-directus-collection table="projects" v-if="itemsByTable('projects').length > 0">
+      <vue-directus-collection table="projects" v-if="countByTable('projects') > 0">
         <vue-directus-item v-for="item in itemsByTable('projects')" table="projects" :id="item._id" :key="item._id">
           <vue-directus-text column="name" placeholder="Enter a name..." :text="item.name" />
           <vue-directus-text column="description" :rich="true" placeholder="Enter a description..." :text="item.description" />
@@ -23,7 +23,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      itemsByTable: 'VueDirectus/items/byTable'
+      itemsByTable: 'VueDirectus/items/itemsByTable',
+      countByTable: 'VueDirectus/items/countByTable'
     })
   },
 
