@@ -17,7 +17,13 @@
       <button @click="save">
         <svg fill="#000000" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M17 15h2V7c0-1.1-.9-2-2-2H9v2h8v8zM7 17V1H5v4H1v2h4v10c0 1.1.9 2 2 2h10v4h2v-4h4v-2H7z" />
+          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+        </svg>
+      </button>
+      <button @click="reset">
+        <svg fill="#000000" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+          <path d="M0 0h24v24H0z" fill="none" />
         </svg>
       </button>
     </div>
@@ -71,6 +77,12 @@ export default {
         height: this.$refs.img.clientHeight,
         width: this.$refs.img.clientWidth
       }
+      // Set fixed dimesion on image in order to stop content
+      // displacement when calculated height is off by 0.n pixels
+      this.$refs.img.setAttribute(
+        'style',
+        `height: ${this.$refs.img.clientHeight}px; width: ${this.$refs.img.clientWidth}px`
+      )
     }
   },
 
@@ -81,6 +93,10 @@ export default {
 
     src(img) {
       return img.name ? img.data : `http://192.168.33.6/storage/uploads/${img.data.name}`
+    },
+
+    reset() {
+      this.cropping = false
     },
 
     upload() {

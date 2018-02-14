@@ -73,7 +73,6 @@ export default {
     }
   },
 
-  // TODO: can this be rewritten with a watcher?
   computed: {
     content: {
       get: function() {
