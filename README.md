@@ -1,3 +1,5 @@
+> Note: this is a proof on concept and has not been tested outside of my local dev environment.
+
 # vue-directus
 
 A Vue.js plugin for front-end content editing.
